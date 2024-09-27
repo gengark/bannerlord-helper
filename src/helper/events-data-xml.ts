@@ -24,7 +24,7 @@ interface EventsDataXmlEventFlags {
 export interface EventsDataXmlEventOption {
     Order: number;
     MultipleRestrictedListOfConsequences: {
-        RestrictedListOfConsequences: ('Continue' | 'ChangeMorale' | string)[];
+        RestrictedListOfConsequences: Array<'Continue' | 'ChangeMorale' | string>;
     };
     OptionText: string;
     TriggerEventName: string;
@@ -36,7 +36,7 @@ export interface EventsDataXmlEvent {
     BackgroundName: string;
     MultipleRestrictedListOfFlags: EventsDataXmlEventFlags;
     Options: {
-        Option: EventsDataXmlEventOption | EventsDataXmlEventOption[]
+        Option: EventsDataXmlEventOption | EventsDataXmlEventOption[];
     };
     ReqCustomCode: boolean;
     SexualContent: boolean;

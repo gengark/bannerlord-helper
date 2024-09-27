@@ -1,7 +1,7 @@
 import partialRight from 'lodash.partialright';
-import { getTranslationFileName, ModuleInfo, renderMarkdown } from '../helper/index.js';
+import { getTranslationFileName, type ModuleInfo, renderMarkdown } from '../helper/index.js';
 import locale from '../locale/index.js';
-import { LanguageRecord, Languages } from '../shared/index.js';
+import { type LanguageRecord, Languages } from '../shared/index.js';
 import { type NodeError, to } from '../utils/index.js';
 import commonWorkflow from './_internal/common-workflow.js';
 import generateEventsTemplate from './_internal/generate-events-template.js';
@@ -20,9 +20,9 @@ export interface EventsCommandOption {
 }
 
 async function events({ to: target, keywords, google = false, openRouter }: EventsCommandOption) {
-    let targetOption: LanguageRecord = {} as LanguageRecord;
+    let targetOption: LanguageRecord | undefined;
     if (target) {
-        targetOption = Languages.getLanguages([target.toLowerCase()])[0] as LanguageRecord;
+        targetOption = Languages.getLanguages([target.toLowerCase()])[0]!;
         if (!targetOption) {
             console.log(locale.EINVAL_LANG_CODE_OR_NAME);
             return;
@@ -47,18 +47,26 @@ async function events({ to: target, keywords, google = false, openRouter }: Even
     const eventsPath = `${module.path}\\Events`;
     const moduleDataPath = `${module.path}\\ModuleData`;
     const [generateError, dictionary] = await to<ModuleDataDictionary, NodeError>(
-        commonWorkflow<ModuleDataDictionary>([
-            normalizeEventsData,
-            partialRight(generateEventsTemplate, moduleDataPath, eventsPath),
-            targetOption ? partialRight(translateEventsLangXml, moduleDataPath, targetOption, google, openRouter) : undefined,
-        ], eventsPath, {
-            messages: [
-                locale.SPIN_LOCALE_NORMALIZE_XML,
-                locale.SPIN_GENERATE_NORMALIZE_XML,
-                targetOption ? `${locale.SPIN_LOCALE_TRANSLATE_XML} > ${openRouter ? 'OpenRouter' : google ? 'Google' : 'Bing'}` : undefined,
+        commonWorkflow<ModuleDataDictionary>(
+            [
+                normalizeEventsData,
+                partialRight(generateEventsTemplate, moduleDataPath, eventsPath),
+                targetOption
+                    ? partialRight(translateEventsLangXml, moduleDataPath, targetOption, google, openRouter)
+                    : undefined,
             ],
-            translateIndex: 2,
-        }),
+            eventsPath,
+            {
+                messages: [
+                    locale.SPIN_LOCALE_NORMALIZE_XML,
+                    locale.SPIN_GENERATE_NORMALIZE_XML,
+                    targetOption
+                        ? `${locale.SPIN_LOCALE_TRANSLATE_XML} > ${openRouter ? 'OpenRouter' : google ? 'Google' : 'Bing'}`
+                        : undefined,
+                ],
+                translateIndex: 2,
+            },
+        ),
     );
     if (generateError || !dictionary) return;
 
@@ -67,9 +75,9 @@ async function events({ to: target, keywords, google = false, openRouter }: Even
     const fileKeys = [...dictionary.keys()];
     const fileRows = fileKeys.map((key) => {
         const count = Object.keys(dictionary.get(key) || {}).length;
-        const targetPath = `\\${module.id}\\ModuleData\\${targetOption.code}\\${getTranslationFileName(
+        const targetPath = `\\${module.id}\\ModuleData\\${targetOption!.code}\\${getTranslationFileName(
             key,
-            targetOption.code,
+            targetOption!.code,
         )}`;
         return `| \`${key}\` | ${count} | ${targetPath} |`;
     });

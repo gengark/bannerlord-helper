@@ -51,7 +51,11 @@ async function translate({ to: target, from: source = 'EN', prefix = '', keyword
             ],
             moduleDataPath,
             {
-                messages: [locale.SPIN_LOCALE_NORMALIZE_XML, locale.SPIN_LOCALE_TRANSLATE_XML, locale.SPIN_LOCALE_TRANSLATE_XML],
+                messages: [
+                    locale.SPIN_LOCALE_NORMALIZE_XML,
+                    locale.SPIN_LOCALE_TRANSLATE_XML,
+                    locale.SPIN_LOCALE_TRANSLATE_XML,
+                ],
                 translateIndex: 1,
             },
         ),

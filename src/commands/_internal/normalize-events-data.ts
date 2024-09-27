@@ -1,6 +1,6 @@
+import fs from 'node:fs';
 import get from 'lodash.get';
 import set from 'lodash.set';
-import fs from 'node:fs';
 import { eventsDataXml, type EventsDataXmlEvent, type EventsDataXmlEventOption } from '../../helper/index.js';
 import { ErrorCodes } from '../../shared/index.js';
 import { ensure, hash, isObject, type NodeError, run } from '../../utils/index.js';
@@ -47,7 +47,7 @@ function getModuleDataDictionary(
 
         const disabledKey = new Set<string>(illegalKeys);
 
-        let result: ModuleDataItemOption = {};
+        const result: ModuleDataItemOption = {};
         const record = eventsDataXml.read(eventsPath, file);
 
         const eventTag = 'CEEvents.CEEvent';
@@ -99,13 +99,13 @@ function getModuleDataDictionary(
                 if (typeof optionOrder !== 'number') continue;
                 const optionId = `${id}_Option_${optionOrder}`;
 
-                const optionVal = get(option, 'OptionText');
-                if (!optionVal) continue;
+                const optionValue = get(option, 'OptionText');
+                if (!optionValue) continue;
 
-                const optionKey = getTranslationKey(optionVal);
+                const optionKey = getTranslationKey(optionValue);
                 if (optionKey && freezeKeys.includes(optionKey)) continue;
 
-                const optionName = optionKey ? optionVal.replace(`{=${optionKey}}`, '') : optionVal;
+                const optionName = optionKey ? optionValue.replace(`{=${optionKey}}`, '') : optionValue;
                 if (!optionName) continue;
 
                 const invalidOptionKey = !optionKey || disabledKey.has(optionKey);

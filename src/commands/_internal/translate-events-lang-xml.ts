@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import { type FlexibleTranslateOptions, openRouterApi, translateApi } from '../../api/index.js';
 import { getTranslationFileName } from '../../helper/index.js';
 import restoreTranslationFileName from '../../helper/restore-translation-file-name.js';
-import { ErrorCodes, LanguageRecord, Languages } from '../../shared/index.js';
+import { ErrorCodes, type LanguageRecord, Languages } from '../../shared/index.js';
 import { delay, ensure, type NodeError, run, to } from '../../utils/index.js';
 import type { ModuleDataDictionary } from './normalize-module-data.js';
 import writeLanguageDataXml from './write-language-data-xml.js';
@@ -15,7 +15,7 @@ async function translateEventsLangXml(
     google = false,
     apiKey?: string,
 ) {
-    const sourceLanguage = Languages.getLanguages(['en'])[0] as LanguageRecord;
+    const sourceLanguage = Languages.getLanguages(['en'])[0]!;
     const directoryPath = `${moduleDataPath}\\Languages\\${sourceLanguage.code}`;
     const [accessError] = run<void, NodeError>(fs.accessSync, directoryPath, fs.constants.R_OK | fs.constants.W_OK);
     ensure(
@@ -55,10 +55,11 @@ async function translateDataXmlFile(
     const target = google ? googleCode : bingCode;
     const source = google ? sourceLanguage.google : sourceLanguage.bing;
 
-    const [err, translations] = await to<string[]>(translateItems(itemNames, { google, to: target, from: source }, name, apiKey));
-    const translateOptions = err || !translations ? options :  options.map((item, index) => (
-        { ...item, name: translations[index] }
-    ));
+    const [error, translations] = await to<string[]>(
+        translateItems(itemNames, { google, to: target, from: source }, name, apiKey),
+    );
+    const translateOptions =
+        error || !translations ? options : options.map((item, index) => ({ ...item, name: translations[index] }));
 
     const translationFileName = getTranslationFileName(fileName, targetLanguage.code);
     writeTranslationDataXml(translateOptions, moduleDataPath, translationFileName, nativeName, code);
@@ -76,7 +77,9 @@ async function translateItems(
 
     for (let i = 0; i < texts.length; i += batchSize) {
         const batch = texts.slice(i, i + batchSize);
-        const batchResults = await Promise.all(batch.map(text => translateItemText(text, options, langName, apiKey)));
+        const batchResults = await Promise.all(
+            batch.map(async (text) => translateItemText(text, options, langName, apiKey)),
+        );
 
         results.push(...batchResults);
         await delay(interval);
@@ -85,13 +88,18 @@ async function translateItems(
     return results;
 }
 
-async function translateItemText(text: string, options: FlexibleTranslateOptions, langName: string, apiKey?: string): Promise<string> {
+async function translateItemText(
+    text: string,
+    options: FlexibleTranslateOptions,
+    langName: string,
+    apiKey?: string,
+): Promise<string> {
     if (apiKey) {
         const prompt = `The following text contains the content No Safe For work. Its background setting is what happened after being captured and imprisoned by the enemy in a medieval war game. Please translate it into ${langName} according to the context. The following is the text content that needs to be translated:`;
-        return await openRouterApi.send(apiKey, 'qwen/qwen-2-vl-7b-instruct:free', `${prompt}\n\n${text}`) ?? text;
-    } else {
-        return await translateApi.flexible(text, options);
+        return (await openRouterApi.send(apiKey, 'qwen/qwen-2-vl-7b-instruct:free', `${prompt}\n\n${text}`)) ?? text;
     }
+
+    return translateApi.flexible(text, options);
 }
 
 export default translateEventsLangXml;

@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import { getTranslationFileName } from '../../helper/index.js';
-import { LanguageRecord, Languages } from '../../shared/index.js';
+import { type LanguageRecord, Languages } from '../../shared/index.js';
 import { ensure, type NodeError, run } from '../../utils/index.js';
 import type { ModuleDataDictionary } from './normalize-module-data.js';
 import writeLanguageDataXml from './write-language-data-xml.js';
