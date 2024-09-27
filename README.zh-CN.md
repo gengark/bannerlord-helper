@@ -8,7 +8,9 @@
 [![XO code style](https://shields.io/badge/code_style-5ed9c7?logo=xo&labelColor=gray&logoSize=auto&logoWidth=20)](https://github.com/xojs/xo)
 [![License](https://img.shields.io/github/license/gengark/bannerlord-helper?color=slateblue)](LICENSE)
 
-一个用于 《Mount & Blade II: Bannerlord》 的 Node.js 命令行实用工具
+一个用于 Mount & Blade II: Bannerlord 的 Node.js 命令行实用工具
+
+[English](README.md) | 简体中文 | [Türkçe](README.tr-TR.md)
 
 </div>
 
@@ -41,7 +43,7 @@ npm install bannerlord-helper -g
 ```bash
 bh <命令> [选项]
 
-命令：
+命令:
   bh search [query]         在Nexusmod上搜寻模组                          [aliases: query]
   bh info [keywords]        查看用户本地模组信息                            [aliases: view]
   bh language [codeOrName]  展示受支持的语言列表                            [aliases: lang]
@@ -52,11 +54,11 @@ bh <命令> [选项]
                                                                              [aliases: ce]
   bh completion             generate completion script
 
-选项：
+选项:
   -h, --help     显示帮助信息                                                        [布尔]
   -v, --version  显示版本号                                                          [布尔]
 
-示例：
+示例:
   $ bh -h            查看命令行帮助信息
   $ bh language -h   查看 `language` 命令的帮助信息
   $ bh [command] -h  查看指定 `command` 的帮助信息

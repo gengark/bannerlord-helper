@@ -8,65 +8,64 @@
 [![XO code style](https://shields.io/badge/code_style-5ed9c7?logo=xo&labelColor=gray&logoSize=auto&logoWidth=20)](https://github.com/xojs/xo)
 [![License](https://img.shields.io/github/license/gengark/bannerlord-helper?color=slateblue)](LICENSE)
 
-A utility for Node.js Cli for Mount & Blade II: Bannerlord
+Mount & Blade II: Bannerlord için Node.js CLI yardımcı aracı
 
-English | [简体中文](README.zh-CN.md) | [Türkçe](README.tr-TR.md)
+[English](README.md) | [简体中文](README.zh-CN.md) | Türkçe
 
 </div>
 
-## 📖 Introduction
+## 📖 Giriş
 
-> `search`: Search for mods on Nexusmod
+> `search`: Nexusmod'da modları arayın
 >
-> `info`: View local mod information
+> `info`: Yerel mod bilgilerini görüntüleyin
 >
-> `language`: Display the list of translatable languages
+> `language`: Çevrilebilir dillerin listesini görüntüleyin
 >
-> `generate`: Generate translation templates
+> `generate`: Çeviri şablonları oluşturun
 >
-> `translate`: Translate translation templates or one language into another
+> `translate`: Çeviri şablonlarını veya bir dili başka bir dile çevirin
 >
-> `localize`: Fill and repair translation identifiers and translate translatable mod files to the target language
-> (ModuleData)
+> `localize`: Çeviri tanımlayıcılarını doldurun ve onarın, çevirilebilir mod dosyalarını hedef dile çevirin (ModuleData)
 >
-> `events`: Fill and repair translation identifiers and translate translatable mod files to the target language
-> (Events)
+> `events`: Çeviri tanımlayıcılarını doldurun ve onarın, çevirilebilir mod dosyalarını hedef dile çevirin (Etkinlikler)
 
-## ⚙️ Installation
+## ⚙️ Kurulum
 
 ```bash
 npm install bannerlord-helper -g
 ```
 
-## 🚀 Usage
+## 🚀 Kullanım
 
 ![Usage Screenshot](docs/images/usage-bilingual.png)
 
 ```bash
-bh <command> [options]
+bh <komut> [seçenekler]
 
-Commands:
-  bh search [query]         Search mods on Nexusmod             [aliases: query]
-  bh info [keywords]        View local mod information           [aliases: view]
-  bh language [codeOrName]  Display a list of supported languages[aliases: lang]
-  bh generate [keywords]    Generate translation templates by completing transla
-                            tion identifiers                      [aliases: gen]
-  bh translate [keywords]   Translate from one language to another
-                                                                [aliases: trans]
-  bh localize [keywords]    Translate mod files to the target language
-                                                               [aliases: locale]
-  bh events [keywords]      Combined `generate` and `translate` commands for the
-                             `Events` directory                    [aliases: ce]
+Komutlar:
+  bh search [query]         Nexus Modlarında mod arayın     [takma adlar: query]
+  bh info [keywords]        Yerel mod bilgilerini görüntüleyin
+                                                             [takma adlar: view]
+  bh language [codeOrName]  Desteklenen dillerin listesini görüntüleyin
+                                                             [takma adlar: lang]
+  bh generate [keywords]    Çeviri tanımlayıcılarını tamamlayarak çeviri şablonl
+                            arı oluşturun                     [takma adlar: gen]
+  bh translate [keywords]   Bir dilden diğerine çeviri yapın[takma adlar: trans]
+  bh localize [keywords]    Mod dosyalarını hedef dile çevirin
+                                                           [takma adlar: locale]
+  bh events [keywords]      'Olaylar' dizini için birleştirilmiş 'oluştur' ve 'ç
+                            evir' komutları                    [takma adlar: ce]
   bh completion             generate completion script
 
-Options:
-  -h, --help     Show help                                             [boolean]
-  -v, --version  Show version number                                   [boolean]
+Seçenekler:
+  -h, --help     Yardım detaylarını göster                             [boolean]
+  -v, --version  Versiyon detaylarını göster                           [boolean]
 
-Examples:
-  $ bh -h            View CLI help information
-  $ bh language -h   View help information for the `language` command
-  $ bh [command] -h  View help information for a specific `command`
+Örnekler:
+  $ bh -h            CLI yardım bilgilerini görüntüleyin
+  $ bh language -h   'Dil' komutuna ilişkin yardım bilgilerini görüntü leyin
+  $ bh [command] -h  Belirli bir "komut" için yardım bilgilerini görün tüleme
 ```
 
 ## 🌐 i18n
@@ -87,17 +86,17 @@ Examples:
 | Chinese Simplified  |    简体中文     |    zh     |          CN          | [src/locale/zh-CN.ts](src/locale/zh-CN.ts) |
 | Chinese Traditional |    繁體中文     |    zh     |          TW          | [src/locale/zh-TW.ts](src/locale/zh-TW.ts) |
 
-## 🎖️ Credits
+## 🎖️ Katkıda Bulunanlar
 
-- [node-translate](https://github.com/kabeep/node-translate) - 🦜 A powerful, secure and feature-rich api via Google
-  Translation.
-- [micro-translate-api](https://github.com/Chewawi/microsoft-translate-api) - A simple, powerful and free API for
-  Microsoft Translator for Node.js
+- [node-translate](https://github.com/kabeep/node-translate) - 🦜 Güçlü, güvenli ve özellik açısından zengin bir Google
+  Çeviri API'si.
+- [micro-translate-api](https://github.com/Chewawi/microsoft-translate-api) - Node.js için Microsoft Çeviri için basit,
+  güçlü ve ücretsiz bir API.
 
-## 🤝 Contribution
+## 🤝 Katkı
 
-Contributions via Pull Requests or [Issues](https://github.com/gengark/bannerlord-helper/issues) are welcome.
+Pull Requestler veya [Issues](https://github.com/gengark/bannerlord-helper/issues) yoluyla katkıda bulunabilirsiniz.
 
-## 📄 License
+## 📄 Lisans
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+Bu proje MIT Lisansı ile lisanslanmıştır. Ayrıntılar için [LICENSE](LICENSE) dosyasına bakın.
