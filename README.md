@@ -5,6 +5,7 @@
 [![NodeJS Engines](https://img.shields.io/node/v/bannerlord-helper?color=lightseagreen)](https://nodejs.org/docs/latest/api/)
 [![Install Size](https://packagephobia.com/badge?p=bannerlord-helper)](https://packagephobia.com/result?p=bannerlord-helper)
 [![NPM Downloads](https://img.shields.io/npm/d18m/bennerlord-helper?color=cornflowerblue)](https://www.npmjs.com/package/bannerlord-helper)
+[![XO code style](https://shields.io/badge/code_style-5ed9c7?logo=xo&labelColor=gray&logoSize=auto&logoWidth=20)](https://github.com/xojs/xo)
 [![License](https://img.shields.io/github/license/gengark/bannerlord-helper?color=slateblue)](LICENSE)
 
 A utility for Node.js Cli for Mount & Blade II: Bannerlord
