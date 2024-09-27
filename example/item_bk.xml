@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Items>
+  <Item id="rus_gun"
+        name="{=TBW9E2aeoio}Arquebus"
+        body_name="bo_cross_bow_heavy"
+        mesh="arquebus_body_1"
+        culture="Culture.sturgia"
+        weight="5.0"
+        appearance="0.8"
+        difficulty="90"
+        Type="Crossbow"
+        AmmoOffset="0.0, 0, 0"
+        item_holsters="sword_back:sword_back_2:sword_back_3:sword_back_4"
+        value="2000"
+        holster_position_shift="0.02,0,0">
+    <ItemComponent>
+      <Weapon weapon_class="Crossbow"
+              ammo_class="Bolt"
+              ammo_limit="1"
+              thrust_speed="95"
+              speed_rating="15"
+              missile_speed="100"
+              weapon_length="80"
+              accuracy="55"
+              thrust_damage="100"
+              thrust_damage_type="Pierce"
+              item_usage="gun"
+              reload_phase_count="3"
+              physics_material="wood_weapon"
+              center_of_mass="0,0,0.4"
+              modifier_group="crossbow">
+        <WeaponFlags RangedWeapon="true"
+                     HasString="true"
+                     CantReloadOnHorseback="true"
+                     CanPenetrateShield="true"
+                     NotUsableWithOneHand="true"
+                     TwoHandIdleOnMount="true" />
+      </Weapon>
+    </ItemComponent>
+    <Flags />
+  </Item>
+  <Item id="Ball_Ammo"
+        name="Ball Ammo"
+        is_merchandise="false"
+        body_name="bo_capsule_arrow"
+        holster_body_name="bo_axe_short"
+        flying_mesh="bolt_bl_flying"
+        mesh="mball"
+        holster_mesh="stone_holster"
+        holster_mesh_with_weapon="stone_holster"
+        weight="0.1"
+        appearance="1"
+        Type="Bolts"
+        item_holsters="quiver_bolts:quiver_bolts_2:quiver_back_middle:quiver_back_top">
+    <ItemComponent>
+      <Weapon weapon_class="Bolt"
+              stack_amount="19"
+              thrust_speed="0"
+              thrust_damage="5"
+              thrust_damage_type="Blunt"
+              speed_rating="5"
+              missile_speed="12"
+              weapon_length="47"
+              item_usage=""
+              passby_sound_code="event:/mission/combat/missile/passby"
+              rotation="180, 0, 0"
+              physics_material="missile"
+              sticking_position="0,0,0"
+              sticking_rotation="90,0,0"
+              trail_particle_name="gun_trail"
+              center_of_mass="0,0,-0.1">
+        <WeaponFlags AttachAmmoToVisual="false"
+                     Consumable="true"
+                     AmmoSticksWhenShot="false"
+                     AmmoBreaksOnBounceBack="true" />
+        <WeaponFlags Consumable="true"
+                     AmmoBreaksOnBounceBack="true"
+                     UseHandAsThrowBase="true"
+                     LeavesTrail="true"
+                     BonusAgainstShield="true" />
+      </Weapon>
+    </ItemComponent>
+    <Flags ForceAttachOffHandPrimaryItemBone="true" />
+  </Item>
+  <!--STURGIA ITEMS-->
+  <CraftedItem id="sturgia_Dagger_1"
+               name="Hunting Knife"
+               crafting_template="Dagger"
+               culture="Culture.sturgia"
+               value="20">
+    <Pieces>
+      <Piece id="dagger_blade_3"
+             Type="Blade"
+             scale_factor="110" />
+      <Piece id="aserai_dagger_guard_1"
+             Type="Guard" />
+      <Piece id="aserai_grip_5"
+             Type="Handle"
+             scale_factor="90" />
+      <Piece id="khuzait_pommel_1"
+             Type="Pommel" />
+    </Pieces>
+    <!-- Length: 62 Weight: 0.48 -->
+  </CraftedItem>
+</Items>

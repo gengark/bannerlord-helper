@@ -1,0 +1,37 @@
+{
+    "prettier": true,
+    "semi": true,
+    "space": 4,
+    "envs": [
+        "node",
+        "es2021"
+    ],
+    "ignore": [
+        "src/locale/*"
+    ],
+    "rules": {
+        "max-params": "off",
+        "no-labels": "off",
+        "no-bitwise": "off",
+        "no-await-in-loop": "off",
+        "import/extensions": "off",
+        "unicorn/prefer-module": "off",
+        "unicorn/no-process-exit": "off",
+        "unicorn/no-array-reduce": "off",
+        "unicorn/prefer-code-point": "off",
+        "unicorn/prefer-string-replace-all": "off",
+        "unicorn/no-array-callback-reference": "off",
+        "@typescript-eslint/ban-types": "off",
+        "@typescript-eslint/no-unsafe-call": "off",
+        "@typescript-eslint/no-unsafe-return": "off",
+        "@typescript-eslint/naming-convention": "off",
+        "@typescript-eslint/no-empty-function": "off",
+        "@typescript-eslint/no-unsafe-argument": "off",
+        "@typescript-eslint/no-unsafe-assignment": "off",
+        "@typescript-eslint/prefer-nullish-coalescing": "off",
+        "@typescript-eslint/consistent-type-definitions": [
+            "error",
+            "interface"
+        ]
+    }
+}
