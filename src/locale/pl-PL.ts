@@ -66,6 +66,7 @@ export default {
     INQ_SELECT_MSG: 'Wybierz mod na NexusMod (naciśnij CTRL + C, aby anulować)',
     INQ_SEARCH_MOD: 'Wprowadź słowa kluczowe do wyszukania (naciśnij CTRL + C, aby anulować)',
     INQ_SEARCH_MATCHING: 'Wprowadź słowa kluczowe, aby wyszukać pasujące mody NexusMod',
+    INQ_CONFIRM_EXPERIMENTAL: 'To polecenie ma charakter eksperymentalny. Przed uruchomieniem wykonaj kopię zapasową wybranego modułu. Czy na pewno kontynuować?',
 
     LABEL_MD_FILE: 'Plik',
     LABEL_MD_ROW: 'Wiersz',

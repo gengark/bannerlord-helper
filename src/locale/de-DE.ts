@@ -66,6 +66,7 @@ export default {
     INQ_SELECT_MSG: 'Bitte wählen Sie einen Mod auf NexusMod aus (drücken Sie STRG + C, um abzubrechen)',
     INQ_SEARCH_MOD: 'Geben Sie Schlüsselwörter für die Suche ein (drücken Sie STRG + C zum Abbrechen)',
     INQ_SEARCH_MATCHING: 'Geben Sie Schlüsselwörter ein, um nach passenden NexusMod-Mods zu suchen',
+    INQ_CONFIRM_EXPERIMENTAL: 'Dieser Befehl ist experimentell. Bitte sichern Sie das ausgewählte Modul, bevor Sie es ausführen.',
 
     LABEL_MD_FILE: 'Datei',
     LABEL_MD_ROW: 'Reihe',

@@ -1,3 +1,5 @@
+import { confirm } from '@inquirer/prompts';
+import chalk from 'chalk';
 import partialRight from 'lodash.partialright';
 import { getTranslationFileName, type ModuleInfo, renderMarkdown } from '../helper/index.js';
 import locale from '../locale/index.js';
@@ -27,6 +29,17 @@ async function events({ to: target, keywords, google = false, openRouter }: Even
             console.log(locale.EINVAL_LANG_CODE_OR_NAME);
             return;
         }
+    }
+
+    const [confirmError, config] = await to(
+        confirm({
+            message: chalk.red(locale.INQ_CONFIRM_EXPERIMENTAL),
+            default: true,
+        }),
+    );
+    if (confirmError || !config) {
+        console.log(locale.EOP_CANCEL);
+        return;
     }
 
     const [selectError, module] = await to<ModuleInfo>(

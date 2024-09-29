@@ -42,7 +42,7 @@ export default {
     USAGE_EG_TRANS_APPOINT: '将 `Languages\\CNs` 目录翻译到 `Languages\\JP`',
     USAGE_EG_TRANS_PREFIX: '为每一项翻译文本加上 `[CNS]` 前缀',
     USAGE_EG_EVENTS: '生成 `Events` 目录的翻译标识并导出翻译模板',
-    USAGE_EG_EVENTS_TO: '生成 `Events` 目录的翻译标识，导出翻译模板并翻译成目标语言',
+    USAGE_EG_EVENTS_TO: '生成 `Events` 目录的翻译标识, 导出翻译模板并翻译成目标语言',
 
     USAGE_EPILOG_EXPORT: '导出的模板语言与源文件相同',
     USAGE_EPILOG_WITHOUT_SUBSCRIBE: '不包含从创意工坊订阅的模组',
@@ -66,6 +66,7 @@ export default {
     INQ_SELECT_MSG: '请选择NexusMod上的模组 (键入 CTRL + C 取消)',
     INQ_SEARCH_MOD: '输入关键字搜索 (键入 CTRL + C 取消)',
     INQ_SEARCH_MATCHING: '输入关键字搜索匹配的NexusMod模组',
+    INQ_CONFIRM_EXPERIMENTAL: '该命令是实验性的, 运行前请先备份将要选择的模组, 确认继续吗?',
 
     LABEL_MD_FILE: '文件',
     LABEL_MD_ROW: '行',
@@ -99,22 +100,22 @@ export default {
     LABEL_FILE_DOWNLOAD_DATE: '下载日期',
 
     WARN_NOT_SAFE_FOR_WORK: '由于NexusMod访问限制, 无法解析NSFW模组页面',
-    WARN_GOOGLE_TRANSLATE: 'Tip: 某些国家或地区可能不支持谷歌翻译，使用 VPN 或尝试必应引擎',
+    WARN_GOOGLE_TRANSLATE: 'Tip: 某些国家或地区可能不支持谷歌翻译, 使用 VPN 或尝试必应引擎',
     WARN_NOT_SAME_MODULE: '检测到本地模组与NexusMod模组不是同一个作者, 可以使用 --reset 参数为本地模组重新索引',
 
     EOP_CANCEL: '用户主动取消',
 
     EACCES_FILE: '权限被拒绝或文件/目录不存在',
-    EACCES_STEAM: '获取应用列表失败，当前仅支持Windows，尝试以管理员身份启动终端，或在 https://github.com/kabeep/node-steam-library/issues 提交问题',
-    EACCES_BROWSER: '无法打开系统默认浏览器，尝试以管理员身份启动终端',
+    EACCES_STEAM: '获取应用列表失败, 当前仅支持Windows, 尝试以管理员身份启动终端, 或在 https://github.com/kabeep/node-steam-library/issues 提交问题',
+    EACCES_BROWSER: '无法打开系统默认浏览器, 尝试以管理员身份启动终端',
 
     ECONNREFUSED_REMOTE_MOD: '无法向NexusMod发送模组查询请求',
     ECONNREFUSED_REMOTE_PAGE: '无法查询NexusMod模组页面',
     ECONNREFUSED_MODEL_RESP: '无法从OpenRouter API获取响应',
 
     ENOENT_FILE: '未找到文件或目录',
-    ENOENT_APP: '未找到应用，请检查Steam仓库中是否存在Mount & Blade II: Bannerlord',
-    ENOENT_MOD_DIR: '未找到应用，请检查 Steam 仓库中是否存在Mount & Blade II: Bannerlord',
+    ENOENT_APP: '未找到应用, 请检查Steam仓库中是否存在Mount & Blade II: Bannerlord',
+    ENOENT_MOD_DIR: '未找到应用, 请检查 Steam 仓库中是否存在Mount & Blade II: Bannerlord',
     ENOENT_MOD_CONFIG: '模组缺少SubModule.xml文件',
     ENOENT_REMOTE_MOD: '未找到匹配的NexusMod模组',
     ENOENT_NATIVE_MOD: '未找到匹配的本地模组',

@@ -66,6 +66,7 @@ export default {
     INQ_SELECT_MSG: 'Veuillez sélectionner un mod sur NexusMod (Appuyez sur CTRL + C pour annuler)',
     INQ_SEARCH_MOD: 'Entrez les mots-clés à rechercher (Appuyez sur CTRL + C pour annuler)',
     INQ_SEARCH_MATCHING: 'Entrez des mots-clés pour rechercher les mods NexusMod correspondants',
+    INQ_CONFIRM_EXPERIMENTAL: 'Cette commande est expérimentale. Veuillez sauvegarder le module à sélectionner avant de l\'exécuter. Êtes-vous sûr de continuer?',
 
     LABEL_MD_FILE: 'Déposer',
     LABEL_MD_ROW: 'Rangée',

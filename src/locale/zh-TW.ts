@@ -66,6 +66,7 @@ export default {
     INQ_SELECT_MSG: '請在 NexusMod 上選擇一個模組（按 CTRL + C 取消）',
     INQ_SEARCH_MOD: '輸入關鍵字進行搜尋（按CTRL+C取消）',
     INQ_SEARCH_MATCHING: '輸入關鍵字搜尋符合的 NexusMod mod',
+    INQ_CONFIRM_EXPERIMENTAL: '此指令是實驗性的, 運行前請先備份將要選擇的模組, 確認繼續嗎?',
 
     LABEL_MD_FILE: '文件',
     LABEL_MD_ROW: '排',

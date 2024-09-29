@@ -66,6 +66,7 @@ export default {
     INQ_SELECT_MSG: 'Seleziona una mod su NexusMod (premi CTRL + C per annullare)',
     INQ_SEARCH_MOD: 'Inserisci le parole chiave da cercare (premi CTRL + C per annullare)',
     INQ_SEARCH_MATCHING: 'Inserisci le parole chiave per cercare le mod NexusMod corrispondenti',
+    INQ_CONFIRM_EXPERIMENTAL: 'Questo comando è sperimentale. Effettua il backup del modulo da selezionare prima di eseguirlo.',
 
     LABEL_MD_FILE: 'File',
     LABEL_MD_ROW: 'Riga',

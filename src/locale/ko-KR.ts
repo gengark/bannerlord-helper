@@ -66,6 +66,7 @@ export default {
     INQ_SELECT_MSG: 'NexusMod에서 모듈을 선택하세요 (CTRL + C로 취소)',
     INQ_SEARCH_MOD: '키워드를 입력하여 검색 (CTRL + C로 취소)',
     INQ_SEARCH_MATCHING: '키워드를 입력하여 일치하는 NexusMod 모듈을 검색합니다',
+    INQ_CONFIRM_EXPERIMENTAL: '이 명령은 실험적입니다. 계속하기 전에 선택할 모듈을 백업하십시오.',
 
     LABEL_MD_FILE: '파일',
     LABEL_MD_ROW: '행',

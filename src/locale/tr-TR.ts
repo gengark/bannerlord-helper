@@ -66,6 +66,7 @@ export default {
     INQ_SELECT_MSG: 'Lütfen NexusMod\'da bir mod seçin (İptal etmek için CTRL + C tuşlarına basın)',
     INQ_SEARCH_MOD: 'Aranacak anahtar kelimeleri girin (İptal etmek için CTRL + C tuşlarına basın)',
     INQ_SEARCH_MATCHING: 'Eşleşen NexusMod modlarını aramak için anahtar kelimeleri girin',
+    INQ_CONFIRM_EXPERIMENTAL: 'Bu komut deneyseldir. Lütfen çalıştırmadan önce seçeceğiniz modülü yedekleyin. Devam ettiğinizden emin misiniz?',
 
     LABEL_MD_FILE: 'Dosya',
     LABEL_MD_ROW: 'Sıra',

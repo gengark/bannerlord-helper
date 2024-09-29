@@ -66,6 +66,7 @@ export default {
     INQ_SELECT_MSG: 'Please select a mod on NexusMod (Press CTRL + C to cancel)',
     INQ_SEARCH_MOD: 'Enter keywords to search (Press CTRL + C to cancel)',
     INQ_SEARCH_MATCHING: 'Enter keywords to search for matching NexusMod mods',
+    INQ_CONFIRM_EXPERIMENTAL: 'This command is experimental. Please back up the module to be selected before running it. Are you sure to continue?',
 
     LABEL_MD_FILE: 'File',
     LABEL_MD_ROW: 'Row',

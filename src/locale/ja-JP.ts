@@ -66,6 +66,7 @@ export default {
     INQ_SELECT_MSG: 'NexusMod上のモジュールを選択してください (CTRL + C でキャンセル)',
     INQ_SEARCH_MOD: 'キーワードを入力して検索 (CTRL + C でキャンセル)',
     INQ_SEARCH_MATCHING: 'キーワードを入力して一致するNexusModモジュールを検索',
+    INQ_CONFIRM_EXPERIMENTAL: 'このコマンドは実験的なものです。実行する前に、選択するモジュールをバックアップしてください。続行してもよろしいですか?',
 
     LABEL_MD_FILE: 'ファイル',
     LABEL_MD_ROW: '行',
