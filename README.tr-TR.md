@@ -22,13 +22,13 @@ Mount & Blade II: Bannerlord için Node.js CLI yardımcı aracı
 >
 > `language`: Çevrilebilir dillerin listesini görüntüleyin
 >
-> `generate`: Çeviri şablonları oluşturun
+> `generate`: Çeviri şablonları oluşturun (ModuleData)
 >
-> `translate`: Çeviri şablonlarını veya bir dili başka bir dile çevirin
+> `translate`: Çeviri şablonlarını veya bir dili başka bir dile çevirin (ModuleData)
 >
 > `localize`: Çeviri tanımlayıcılarını doldurun ve onarın, çevirilebilir mod dosyalarını hedef dile çevirin (ModuleData)
 >
-> `events`: Çeviri tanımlayıcılarını doldurun ve onarın, çevirilebilir mod dosyalarını hedef dile çevirin (Etkinlikler)
+> `events`: Çeviri tanımlayıcılarını doldurun ve onarın, çevirilebilir mod dosyalarını hedef dile çevirin (Events) (*Experimental*)
 
 ## ⚙️ Kurulum
 

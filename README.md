@@ -22,15 +22,15 @@ English | [简体中文](README.zh-CN.md) | [Türkçe](README.tr-TR.md)
 >
 > `language`: Display the list of translatable languages
 >
-> `generate`: Generate translation templates
+> `generate`: Generate translation templates (ModuleData)
 >
-> `translate`: Translate translation templates or one language into another
+> `translate`: Translate translation templates or one language into another (ModuleData)
 >
 > `localize`: Fill and repair translation identifiers and translate translatable mod files to the target language
 > (ModuleData)
 >
 > `events`: Fill and repair translation identifiers and translate translatable mod files to the target language
-> (Events)
+> (Events) (*Experimental*)
 
 ## ⚙️ Installation
 

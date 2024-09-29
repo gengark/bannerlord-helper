@@ -22,13 +22,13 @@
 >
 > `language`: 展示可翻译的语言列表
 >
-> `generate`: 生成翻译模板
+> `generate`: 生成翻译模板 (ModuleData)
 >
-> `translate`: 将翻译模板或一种语言翻译成另一种语言
+> `translate`: 将翻译模板或一种语言翻译成另一种语言 (ModuleData)
 >
 > `localize`: 填充和修复翻译标识，并将可翻译模组文件翻译到目标语言 (ModuleData)
 >
-> `events`: 填充和修复翻译标识，并将可翻译模组文件翻译到目标语言 (Events)
+> `events`: 填充和修复翻译标识，并将可翻译模组文件翻译到目标语言 (Events) (*实验性的*)
 
 ## ⚙️ 安装
 
