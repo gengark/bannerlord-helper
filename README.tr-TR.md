@@ -302,7 +302,7 @@ Pull Requestler veya [Issues](https://github.com/gengark/bannerlord-helper/issue
 <table>
   <tbody>
     <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/dontkillchicken"><img src="https://avatars.githubusercontent.com/u/40334029?v=4?s=100" width="100px;" alt="dontkillchicken"/><br /><sub><b>dontkillchicken</b></sub></a><br /><a href="mailto:1587409536@qq.com" title="E-posta">✉️</a><a href="https://bbs.mountblade.com.cn/forum.php?mod=viewthread&tid=2097412&highlight=%E6%B1%89%E5%8C%96%E6%95%99%E7%A8%8B" title="Eğitimler">✅</a><a href="#" title="Soru">💬</a><a href="#" title="Test Verisi">🔣</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/dontkillchicken"><img src="https://avatars.githubusercontent.com/u/40334029?v=4?s=100" width="100px;" alt="dontkillchicken"/><br /><sub><b>dontkillchicken</b></sub></a><br /><a href="mailto:1587409536@qq.com" title="E-posta">✉️</a><a href="https://bbs.mountblade.com.cn/forum.php?mod=viewthread&tid=2097412&highlight=%E6%B1%89%E5%8C%96%E6%95%99%E7%A8%8B" title="Blog">📝</a><a href="#" title="Soru">💬</a><a href="#" title="Test Verisi">🔣</a></td>
     </tr>
   </tbody>
 </table>
