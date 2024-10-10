@@ -18,7 +18,7 @@
         "watch": "tsup --watch",
         "build": "npm run clean && tsup",
         "clean": "rimraf dist",
-        "locale": "localize src/locale/en-US.ts -t de-DE es-ES fr-FR it-IT ja-JP ko-KR pl-PL pt-pT ru-RU tr-TR zh-CN zh-TW",
+        "locale": "localize src/locale/en-US.ts -t de-DE es-ES fr-FR it-IT ja-JP ko-KR pl-PL pt-PT ru-RU tr-TR zh-CN zh-TW",
         "prepare": "husky"
     },
     "dependencies": {
@@ -66,7 +66,7 @@
         "husky": "^9.1.5",
         "rimraf": "^5.0.10",
         "ts-node": "^10.9.2",
-        "tsup": "^8.2.4",
+        "tsup": "^8.3.0",
         "typescript": "^5.6.2",
         "xo": "^0.58.0"
     },
