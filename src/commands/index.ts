@@ -1,7 +1,20 @@
-export { default as events, type EventsCommandOption } from './events.js';
-export { default as generate, type GenerateCommandOption } from './generate.js';
-export { default as info, type InfoCommandOption } from './info.js';
-export { default as language, type LanguageCommandOption } from './language.js';
-export { default as localize, type LocalizeCommandOption } from './localize.js';
-export { default as search, type SearchCommandOption } from './search.js';
-export { default as translate, type TranslateCommandOption } from './translate.js';
+export type { ExternalCommandOptions } from './external';
+export { default as external } from './external';
+
+export type { GenerateCommandOptions } from './generate';
+export { default as generate } from './generate';
+
+export type { IdentifierCommandOptions, IdentifierStatOptions } from './identifier';
+export { default as identifier } from './identifier';
+
+export type { InfoCommandOptions } from './info';
+export { default as info } from './info';
+
+export type { LanguageCommandOptions } from './language';
+export { default as language } from './language';
+
+export type { SearchCommandOptions } from './search';
+export { default as search } from './search';
+
+export type { TranslateCommandOptions } from './translate';
+export { default as translate } from './translate';

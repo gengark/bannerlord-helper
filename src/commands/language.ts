@@ -1,41 +1,37 @@
 import ora from 'ora';
-import { renderMarkdown } from '../helper/index.js';
-import locale from '../locale/index.js';
-import { Languages, LANGUAGES_LIST } from '../shared/index.js';
+import { validateTranslateLanguage } from '../api';
+import { renderSupportLanguages } from '../components';
+import { useDurationPrint } from '../helper';
+import { languageDictionary } from '../shared';
+import { op } from '../utils';
 
-export interface LanguageCommandOption {
+export interface LanguageCommandOptions {
     codeOrName?: string;
 }
 
-async function language({ codeOrName }: { codeOrName?: string }) {
-    if (codeOrName) {
-        const [option] = Languages.getLanguages([codeOrName.toLowerCase()]);
-        const { code, name, nativeName } = option || {};
-
-        if (!code && !name) {
-            ora().fail(locale.EINVAL_LANG_CODE_OR_NAME);
-            return;
-        }
-
-        const md = await renderMarkdown(`## Language\n\n\`    ${code}\`: **${name}** [${nativeName}]`);
-        console.log(md);
-    } else {
-        const title = `## ${locale.LABEL_MD_LANG_SUPPORT}`;
-
-        const tableHeader = '|CODE|NAME|NATIVE NAME|';
-        const tableSeparator = '| - | - | - |';
-        const tableBodyFixed = '| | | |';
-
-        const list = LANGUAGES_LIST.map((item) => {
-            return `| ${item.code} | ${item.name} | ${item.nativeName} |`;
-        });
-
-        const md = await renderMarkdown(
-            `${title}\n\n${tableHeader}\n${tableSeparator}\n${tableBodyFixed}\n${list.join('\n')}`,
-        );
-
-        console.log(md);
+async function language({ codeOrName }: LanguageCommandOptions = {}) {
+    const printDuration = useDurationPrint();
+    const lang = codeOrName
+        ? languageDictionary.getLanguage(codeOrName)
+        : {
+              code: undefined,
+              name: undefined,
+              nativeName: undefined,
+          };
+    const [error, isValid] = codeOrName ? op(validateTranslateLanguage, lang?.code ?? codeOrName) : [];
+    if (error) {
+        ora().fail(error.message);
+        return;
     }
+
+    if (isValid) {
+        ora().succeed(`${lang!.code}: ${lang!.name} [${lang!.nativeName}]`);
+        return;
+    }
+
+    const md = await renderSupportLanguages(languageDictionary.getAllLanguages());
+    console.log(md);
+    printDuration();
 }
 
 export default language;

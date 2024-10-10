@@ -1,80 +1,55 @@
-import process from 'node:process';
-import partialRight from 'lodash.partialright';
+import merge from 'lodash.merge';
 import ora from 'ora';
-import { translateApi } from '../api/index.js';
-import { type ModuleInfo, type RemoteModuleOption } from '../helper/index.js';
-import readRemoteModule from '../helper/read-remote-module.js';
-import locale from '../locale/index.js';
-import { type NodeError, type Noop, to } from '../utils/index.js';
-import commonWorkflow from './_internal/common-workflow.js';
-import getNativeModuleSearch from './_internal/get-native-module-search.js';
-import getNativeModules from './_internal/get-native-modules.js';
-import getRemoteModulePreview from './_internal/get-remote-module-preview.js';
-import getTranslateModules from './_internal/get-translate-modules.js';
-import getUpdatedModuleConfig, { type CompositeModuleConfig } from './_internal/get-updated-module-config.js';
+import { nexusmodApi } from '../api';
+import { renderModuleDetail } from '../components';
+import { getCliConfig, normalizeTranslateOptions, searchNativeModules } from '../core';
+import { type NativeModuleOptions, useDurationPrint } from '../helper';
+import { $t } from '../shared';
+import { op } from '../utils';
 
-export interface InfoCommandOption {
-    keywords?: string;
-    google?: boolean;
+export interface InfoCommandOptions {
+    language?: string;
+    engine?: string;
     reset?: boolean;
 }
 
-async function info({ keywords, google, reset }: InfoCommandOption) {
+async function info({ language, engine, reset }: InfoCommandOptions = {}) {
     const spinner = ora({ color: 'cyan' });
-
-    const messages = [
-        locale.SPIN_NATIVE_MOD_SEARCH,
-        `${locale.SPIN_MODULE_NAME_TRANSLATE} > ${google ? 'Google' : 'Bing'}`,
-        undefined,
-        undefined,
-        undefined,
-        locale.SPIN_READ_PAGE,
-    ];
-    const pipeline: Noop[] = [
-        getNativeModules,
-        partialRight(getTranslateModules<ModuleInfo>, google),
-        getNativeModuleSearch,
-        (module: ModuleInfo) => {
-            spinner.info(`${locale.SPIN_NEXUSMOD_SEARCH}...`);
-            return module;
-        },
-        partialRight(getUpdatedModuleConfig, google, reset),
-        readRemoteModule<CompositeModuleConfig>,
-    ];
-
-    const [error, option] = await to<RemoteModuleOption<CompositeModuleConfig>, NodeError>(
-        commonWorkflow<RemoteModuleOption<CompositeModuleConfig>>(pipeline, keywords, { messages, translateIndex: 1 }),
-    );
-
-    if (error || !option) process.exit(0);
-
-    if (option.isAdult) {
-        spinner.warn(locale.WARN_NOT_SAFE_FOR_WORK);
+    const [langError, options] = op(normalizeTranslateOptions, { engine, target: language });
+    if (langError) {
+        spinner.fail(langError.message);
         return;
     }
 
-    if (
-        option.createdBy &&
-        option.uploadedBy &&
-        option.author?.name &&
-        ![option.createdBy, option.uploadedBy].includes(option.author.name)
-    ) {
-        spinner.warn(locale.WARN_NOT_SAME_MODULE);
+    const { translateEngine, translateTo } = options;
+
+    const module: (NativeModuleOptions & { nativeName: string }) | undefined = await searchNativeModules({
+        engine: translateEngine,
+        to: translateTo,
+    });
+    if (!module) return;
+
+    const newestConfig = await getCliConfig({
+        directoryPath: module.path,
+        engine: translateEngine,
+        to: translateTo,
+        reset,
+    });
+
+    if (!newestConfig?.id) {
+        spinner.fail($t('CMD_INFO_NO_MODULE_ID_OBTAINED'));
+        return;
     }
 
-    spinner.start(locale.SPIN_MODULE_DESC_TRANSLATE);
-    const timer = setTimeout(() => {
-        spinner.text = locale.WARN_GOOGLE_TRANSLATE;
-        spinner.color = 'yellow';
-        clearTimeout(timer);
-    }, 8000);
-    const translation = await translateApi.messages([option.title, option.description], { google });
-    clearTimeout(timer);
-    spinner.succeed(locale.SPIN_MODULE_DESC_TRANSLATE);
+    const printDuration = useDurationPrint();
+    spinner.start($t('CMD_SEARCH_QUERY_MODULE_INFORMATION'));
+    const remoteModule = await nexusmodApi.getModulePage(newestConfig.id);
+    spinner.stop();
 
-    const md = await getRemoteModulePreview(option, translation);
-
-    console.log('\n', md);
+    const compositeInfo = merge(module, remoteModule, { engine: translateEngine, target: translateTo });
+    const md = await renderModuleDetail(compositeInfo);
+    console.log(md);
+    printDuration();
 }
 
 export default info;

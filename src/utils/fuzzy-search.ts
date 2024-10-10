@@ -1,4 +1,21 @@
 /**
+ * Checks if the given string contains a character specified by its code point.
+ * @param {string} haystack - The string to search within.
+ * @param {number} nch - The code point of the character to search for.
+ * @returns {boolean} True if the character is found; otherwise, false.
+ */
+function containsChar(haystack: string, nch: number): boolean {
+    let index = 0;
+    while (index < haystack.length) {
+        if (haystack.codePointAt(index++) === nch) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
  * Performs a fuzzy search to determine if the `needle` string can be found
  * within the `haystack` string, allowing for non-consecutive matching of characters.
  *
@@ -27,16 +44,12 @@ function fuzzySearch(needle: string, haystack: string): boolean {
         return needle === haystack;
     }
 
-    outer: for (let i = 0, index = 0; i < needleLength; i++) {
-        const nch = needle.charCodeAt(i);
+    for (let i = 0; i < needleLength; i++) {
+        const nch = needle.codePointAt(i)!;
 
-        while (index < haystackLength) {
-            if (haystack.charCodeAt(index++) === nch) {
-                continue outer;
-            }
+        if (!containsChar(haystack, nch)) {
+            return false;
         }
-
-        return false;
     }
 
     return true;

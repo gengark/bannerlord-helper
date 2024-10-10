@@ -1,33 +1,36 @@
+import merge from 'lodash.merge';
 import { osLocaleSync } from 'os-locale';
-import deDE from './de-DE.js';
-import enUS from './en-US.js';
-import esES from './es-ES.js';
-import frFR from './fr-FR.js';
-import itIT from './it-IT.js';
-import jaJP from './ja-JP.js';
-import koKR from './ko-KR.js';
-import plPL from './pl-PL.js';
-import ptPT from './pt-PT.js';
-import ruRU from './ru-RU.js';
-import trTR from './tr-TR.js';
-import zhCN from './zh-CN.js';
-import zhTW from './zh-TW.js';
+import deDE from './de-DE';
+import enUS from './en-US';
+import esES from './es-ES';
+import frFR from './fr-FR';
+import itIT from './it-IT';
+import jaJP from './ja-JP';
+import koKR from './ko-KR';
+import plPL from './pl-PL';
+import ptPT from './pt-pT';
+import ruRU from './ru-RU';
+import trTR from './tr-TR';
+import zhCN from './zh-CN';
+import zhTW from './zh-TW';
 
 function getLocale() {
-    const locale = osLocaleSync();
-    const abbr = locale.split('-')[0];
+    const localeCode = osLocaleSync();
+    const localeAbbr = localeCode.split('-')[0];
 
-    switch (abbr) {
+    switch (localeAbbr) {
         case 'pt': {
             return ptPT;
         }
 
         case 'zh': {
-            return {
-                'zh-CN': zhCN,
-                'zh-TW': zhTW,
-                'zh-HK': zhTW,
-            }[locale] ?? enUS;
+            return (
+                {
+                    'zh-CN': zhCN,
+                    'zh-TW': zhTW,
+                    'zh-HK': zhTW,
+                }[localeCode] ?? zhCN
+            );
         }
 
         case 'de': {
@@ -72,4 +75,6 @@ function getLocale() {
     }
 }
 
-export default getLocale();
+const locale = merge<typeof enUS, ReturnType<typeof getLocale>>(enUS, getLocale());
+
+export default locale;

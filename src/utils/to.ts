@@ -9,7 +9,7 @@
  * // Usage example:
  * const [error, data] = await to(fetch('/api/data'));
  */
-export async function to<T, U = Error>(promise: Promise<T>): Promise<[U, undefined] | [undefined, T]> {
+async function to<T, U = Error>(promise: Promise<T>): Promise<[U, undefined] | [undefined, T]> {
     return promise
         .then<[undefined, T]>((data: T) => [undefined, data])
         .catch<[U, undefined]>((error: U) => {

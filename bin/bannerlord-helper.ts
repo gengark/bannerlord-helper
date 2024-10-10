@@ -1,201 +1,233 @@
 #!/usr/bin/env node
+import process from 'node:process';
+import Exception from '@kabeep/exception';
 import chalk from 'chalk';
 import yargs, { type Argv } from 'yargs';
 import { hideBin } from 'yargs/helpers';
-import type {
-    EventsCommandOption,
-    GenerateCommandOption,
-    InfoCommandOption,
-    LanguageCommandOption,
-    LocalizeCommandOption,
-    SearchCommandOption,
-    TranslateCommandOption,
-} from '../src/index.js';
-import { events, generate, info, language, locale, localize, search, translate } from '../src/index.js';
+import {
+    $t,
+    external,
+    type ExternalCommandOptions,
+    generate,
+    type GenerateCommandOptions,
+    identifier,
+    type IdentifierCommandOptions,
+    info,
+    type InfoCommandOptions,
+    language,
+    type LanguageCommandOptions,
+    search,
+    type SearchCommandOptions,
+    translate,
+    type TranslateCommandOptions,
+} from '../src';
 
-yargs(hideBin(process.argv))
+void yargs(hideBin(process.argv))
     .scriptName('bh')
-    .usage(locale.USAGE)
-    // @ts-ignore TS2769: No overload matches this call. (Caused by required parameters `query`)
-    .command(['search [query]', 'query'], locale.USAGE_DESC_SEARCH, (yargs: Argv<SearchCommandOption>) => {
-        return yargs
-            .option('query', {
-                type: 'string',
-                alias: 'q',
-                describe: locale.USAGE_OPT_QUERY,
-                demandOption: true,
-            })
-            .option('open', {
-                type: 'boolean',
-                alias: 'o',
-                describe: locale.USAGE_OPT_OPEN,
-            })
-            .option('open-router', {
-                type: 'string',
-                describe: `${locale.USAGE_OPT_OPEN_ROUTER_SUMMARY} (Power by OpenRouter)`,
-            })
-            .option('google', {
-                type: 'boolean',
-                describe: `${locale.USAGE_OPT_GOOGLE} (Bing by Default)`,
-            })
-            .example(chalk.yellow('$ bh search "ButterLib"'), locale.USAGE_EG_SEARCH)
-            .example(chalk.yellow('$ bh search "Butter Lib" --open'), locale.USAGE_EG_BROWSE)
-            .example(chalk.yellow('$ bh query ButterLib --google'), locale.USAGE_EG_GOOGLE)
-            .example(
-                chalk.yellow('$ bh query "ButterLib" --open-router="xx-xx-xx-xxx..."'),
-                locale.USAGE_EG_OPEN_ROUTER,
-            );
-    }, boundary<[SearchCommandOption]>(search))
-    .command(['info [keywords]', 'view'], locale.USAGE_DESC_INFO, (yargs: Argv<InfoCommandOption>) => {
-        return yargs
-            .option('keywords', {
-                type: 'string',
-                alias: 'k',
-                describe: locale.USAGE_OPT_KEYWORDS,
-            })
-            .option('reset', {
-                type: 'boolean',
-                alias: 'r',
-                describe: locale.USAGE_OPT_RESET,
-            })
-            .option('google', {
-                type: 'boolean',
-                describe: `${locale.USAGE_OPT_GOOGLE} (Bing by Default)`,
-            })
-            .example(chalk.yellow('$ bh info'), locale.USAGE_EG_INFO)
-            .example(chalk.yellow('$ bh info "Butter"'), locale.USAGE_EG_INFO_KEYWORDS)
-            .example(chalk.yellow('$ bh view --google'), locale.USAGE_EG_GOOGLE)
-            .example(chalk.yellow('$ bh view --reset'), locale.USAGE_EG_INFO_RESET)
-            .epilog(chalk.grey(`* ${locale.USAGE_EPILOG_WITHOUT_SUBSCRIBE}\n* ${locale.USAGE_EPILOG_WITHOUT_SUBSCRIBE}`));
-    }, boundary<[InfoCommandOption]>(info))
-    .command(['language [codeOrName]', 'lang'], locale.USAGE_DESC_LANG, (yargs: Argv<LanguageCommandOption>) => {
-        return yargs
-            .option('code-or-name', {
-                type: 'string',
-                describe: locale.USAGE_OPT_CODE_OR_NAME,
-            })
-            .example(chalk.yellow('$ bh language'), locale.USAGE_EG_LANG)
-            .example(chalk.yellow('$ bh language cns'), locale.USAGE_EG_LANG_CODE);
-    }, boundary<[LanguageCommandOption]>(language))
-    .command(['generate [keywords]', 'gen'], locale.USAGE_DESC_GEN, (yargs: Argv<GenerateCommandOption>) => {
-        return yargs
-            .option('keywords', {
-                type: 'string',
-                alias: 'k',
-                describe: locale.USAGE_OPT_KEYWORDS,
-            })
-            .option('to', {
-                type: 'string',
-                alias: 't',
-                describe: `${locale.USAGE_OPT_TO} (EN by Default)`,
-            })
-            .option('google', {
-                type: 'boolean',
-                describe: `${locale.USAGE_OPT_GOOGLE} (Bing by Default)`,
-            })
-            .example(chalk.yellow('$ bh generate'), locale.USAGE_EG_GEN)
-            .example(chalk.yellow('$ bh gen StoreMode -t jp'), locale.USAGE_EG_GEN_SEARCH)
-            .example(chalk.yellow('$ bh gen -to="chinese simplified"'), locale.USAGE_EG_GEN_LANGUAGE)
-            .epilog(chalk.grey(`* ${locale.USAGE_EPILOG_WITHOUT_SUBSCRIBE}\n* ${locale.USAGE_EPILOG_EXPORT}\n* USAGE_EPILOG_SOURCE_SAFE`));
-    }, boundary<[GenerateCommandOption]>(generate))
-    // @ts-ignore TS2769: No overload matches this call. (Caused by required parameters `to`)
-    .command(['translate [keywords]', 'trans'], locale.USAGE_DESC_TRANSLATE, (yargs: Argv<TranslateCommandOption>) => {
-        return yargs
-            .option('keywords', {
-                type: 'string',
-                alias: 'k',
-                describe: locale.USAGE_OPT_KEYWORDS,
-            })
-            .option('to', {
-                type: 'string',
-                alias: 't',
-                describe: locale.USAGE_OPT_TO,
-                demandOption: true,
-            })
-            .option('from', {
-                type: 'string',
-                alias: 'f',
-                describe: `${locale.USAGE_OPT_FROM} (EN by Default)`,
-            })
-            .option('prefix', {
-                type: 'string',
-                alias: 'p',
-                describe: locale.USAGE_OPT_PREFIX,
-            })
-            .option('google', {
-                type: 'boolean',
-                describe: `${locale.USAGE_OPT_GOOGLE} (Bing by Default)`,
-            })
-            .example(chalk.yellow('$ bh translate -t cns'), locale.USAGE_EG_TRANS)
-            .example(chalk.yellow('$ bh translate -from cns -t Japanese'), locale.USAGE_EG_TRANS_APPOINT)
-            .example(chalk.yellow('$ bh translate -t cns -p="[CNS]"'), locale.USAGE_EG_TRANS_PREFIX)
-            .epilog(chalk.grey(`* ${locale.USAGE_EPILOG_WITHOUT_SUBSCRIBE}\n* ${locale.USAGE_EPILOG_SOURCE_SAFE}`));
-    }, boundary<[TranslateCommandOption]>(translate))
+    .usage($t('CMD_USAGE'))
+    .options({
+        engine: {
+            type: 'string',
+            choices: ['microsoft', 'google', 'deeplx'],
+            describe: `${$t('CMD_USAGE_OPT_ENGINE')} (Default by microsoft)`,
+            default: 'microsoft',
+        },
+    })
     .command(
-        ['localize [keywords]', 'locale'],
-        locale.USAGE_DESC_LOCALE,
-        // @ts-ignore TS2769: No overload matches this call. (Caused by required parameters `to`)
-        (yargs: Argv<LocalizeCommandOption>) => {
+        ['search [keywords]', 'browse'],
+        $t('CMD_SEARCH_USAGE'),
+        (yargs: Argv<SearchCommandOptions>) => {
             return yargs
                 .option('keywords', {
                     type: 'string',
                     alias: 'k',
-                    describe: locale.USAGE_OPT_KEYWORDS,
+                    describe: $t('CMD_USAGE_OPT_KEYWORDS'),
+                    demandOption: true,
+                })
+                .option('language', {
+                    type: 'string',
+                    alias: 'l',
+                    describe: $t('CMD_USAGE_OPT_LANGUAGE'),
+                })
+                .example(chalk.yellow('$ bh search "ButterLib"'), $t('CMD_SEARCH_USAGE_EG'))
+                .example(chalk.yellow('$ bh search "改良驻军" --language="cns"'), $t('CMD_SEARCH_USAGE_EG_LANGUAGE'))
+                .example(
+                    chalk.yellow('$ bh search "Diplomacia" --language="sp" --engine="google"'),
+                    $t('CMD_SEARCH_USAGE_EG_GOOGLE'),
+                )
+                .example(chalk.yellow('$ bh browse -k Diplomacy -l tr'), $t('CMD_USAGE_EG_ALIAS'));
+        },
+        boundary<[SearchCommandOptions]>(search),
+    )
+    .command(
+        ['info', 'query'],
+        $t('CMD_INFO_USAGE'),
+        (yargs: Argv<InfoCommandOptions>) => {
+            return yargs
+                .option('language', {
+                    type: 'string',
+                    alias: 'l',
+                    describe: $t('CMD_USAGE_OPT_LANGUAGE'),
+                })
+                .option('reset', {
+                    type: 'boolean',
+                    alias: 'r',
+                    describe: $t('CMD_INFO_USAGE_OPT_RESET'),
+                })
+                .example(chalk.yellow('$ bh info --language="cns"'), $t('CMD_INFO_USAGE_EG_LANGUAGE'))
+                .example(chalk.yellow('$ bh view -l cns'), $t('CMD_USAGE_EG_ALIAS'))
+                .epilog(chalk.grey(`* ${$t('CMD_INFO_USAGE_EPILOG_WORKSHOP')}`));
+        },
+        boundary<[InfoCommandOptions]>(info),
+    )
+    .command(
+        ['identifier', 'ident'],
+        $t('CMD_IDENTIFIER_USAGE'),
+        (yargs: Argv<IdentifierCommandOptions>) => {
+            return yargs
+                .option('language', {
+                    type: 'string',
+                    alias: 'l',
+                    describe: $t('CMD_USAGE_OPT_LANGUAGE'),
+                })
+                .example(chalk.yellow('$ bh identifier --language="cns"'), $t('CMD_IDENTIFIER_USAGE_EG_LANGUAGE'))
+                .example(chalk.yellow('$ bh ident -l cns'), $t('CMD_USAGE_EG_ALIAS'))
+                .epilog(chalk.grey(`* ${$t('CMD_INFO_USAGE_EPILOG_WORKSHOP')}`));
+        },
+        boundary<[IdentifierCommandOptions]>(identifier),
+    )
+    .command(
+        ['generate', 'gen'],
+        $t('CMD_GENERATE_USAGE'),
+        (yargs: Argv<GenerateCommandOptions>) => {
+            return yargs
+                .option('language', {
+                    type: 'string',
+                    alias: 'l',
+                    describe: $t('CMD_USAGE_OPT_LANGUAGE'),
                 })
                 .option('to', {
                     type: 'string',
                     alias: 't',
-                    describe: locale.USAGE_OPT_TO,
+                    describe: $t('CMD_GENERATE_USAGE_OPT_TO'),
+                    default: 'EN',
+                })
+                .option('force', {
+                    type: 'boolean',
+                    describe: $t('CMD_GENERATE_USAGE_OPT_FORCE'),
+                    default: false,
+                })
+                .example(chalk.yellow('$ bh generate'), $t('CMD_GENERATE_USAGE_EG_GENERATE'))
+                .example(chalk.yellow('$ bh generate -to="tr"'), $t('CMD_GENERATE_USAGE_EG_TO_CODE'))
+                .example(chalk.yellow('$ bh generate -to="chinese simplified"'), $t('CMD_GENERATE_USAGE_EG_TO_NAME'))
+                .example(chalk.yellow('$ bh gen -t cns'), $t('CMD_USAGE_EG_ALIAS'))
+                .epilog(chalk.grey(`* ${$t('CMD_INFO_USAGE_EPILOG_WORKSHOP')}`));
+        },
+        boundary<[GenerateCommandOptions]>(generate),
+    )
+    .command(
+        ['translate', 'trans'],
+        $t('CMD_TRANSLATE_USAGE'),
+        (yargs: Argv<TranslateCommandOptions>) => {
+            return yargs
+                .option('to', {
+                    type: 'string',
+                    alias: 't',
+                    describe: $t('CMD_TRANSLATE_USAGE_OPT_TO'),
                     demandOption: true,
+                })
+                .option('from', {
+                    type: 'string',
+                    alias: 'f',
+                    describe: $t('CMD_TRANSLATE_USAGE_OPT_FROM'),
+                    default: 'EN',
                 })
                 .option('prefix', {
                     type: 'string',
                     alias: 'p',
-                    describe: locale.USAGE_OPT_PREFIX,
+                    describe: $t('CMD_TRANSLATE_USAGE_OPT_PREFIX'),
                 })
-                .option('google', {
+                .option('force', {
                     type: 'boolean',
-                    describe: `${locale.USAGE_OPT_GOOGLE} (Bing by Default)`,
+                    describe: $t('CMD_TRANSLATE_USAGE_OPT_FORCE'),
+                    default: false,
                 })
-                .example(chalk.yellow('$ bh localize -t cns'), locale.USAGE_EG_LOCALIZE)
-                .example(chalk.yellow('$ bh locale -t cns Sandbox'), locale.USAGE_EG_LOCALIZE_SEARCH)
+                .example(chalk.yellow('$ bh translate --to="cns"'), $t('CMD_TRANSLATE_USAGE_EG_TO_CODE'))
+                .example(chalk.yellow('$ bh translate --from="cns" --to="Japanese"'), $t('CMD_TRANSLATE_USAGE_EG_FROM'))
                 .example(
-                    chalk.yellow('$ bh locale "Open Source Armory" -t cns -p="[OSA]"'),
-                    locale.USAGE_EG_LOCALIZE_PREFIX,
+                    chalk.yellow('$ bh translate --to="cns" --prefix="[CNS]"'),
+                    $t('CMD_TRANSLATE_USAGE_EG_PREFIX'),
                 )
-                .epilog(chalk.grey(`* ${locale.USAGE_EPILOG_WITHOUT_SUBSCRIBE}\n* ${locale.USAGE_EPILOG_TRANSLATE_SIGN}`));
+                .example(chalk.yellow('$ bh translate --to="cns" --force'), $t('CMD_TRANSLATE_USAGE_EG_FORCE'))
+                .example(chalk.yellow('$ bh trans -f en -t cns -p [CNS]'), $t('CMD_USAGE_EG_ALIAS'))
+                .epilog(chalk.grey(`* ${$t('CMD_INFO_USAGE_EPILOG_WORKSHOP')}`));
         },
-        boundary<[LocalizeCommandOption]>(localize),
+        boundary<[TranslateCommandOptions]>(translate),
     )
-    .command(['events [keywords]', 'ce'], locale.USAGE_DESC_EVENTS, (yargs: Argv<EventsCommandOption>) => {
-        return yargs
-            .option('keywords', {
-                type: 'string',
-                alias: 'k',
-                describe: locale.USAGE_OPT_KEYWORDS,
-            })
-            .option('to', {
-                type: 'string',
-                alias: 't',
-                describe: locale.USAGE_OPT_TO,
-            })
-            .option('google', {
-                type: 'boolean',
-                describe: `${locale.USAGE_OPT_GOOGLE} (Bing by Default)`,
-            })
-            .option('open-router', {
-                type: 'string',
-                describe: `${locale.USAGE_OPT_OPEN_ROUTER_SUMMARY} (Power by OpenRouter)`,
-            })
-            .example(chalk.yellow('$ bh events'), locale.USAGE_EG_EVENTS)
-            .example(chalk.yellow('$ bh events -t cns'), locale.USAGE_EG_EVENTS_TO);
-    }, boundary<[EventsCommandOption]>(events))
-    .demandCommand()
+    .command(
+        ['external', 'ext'],
+        $t('CMD_EXTERNAL_USAGE'),
+        (yargs: Argv<ExternalCommandOptions>) => {
+            return yargs
+                .option('to', {
+                    type: 'string',
+                    alias: 't',
+                    describe: $t('CMD_EXTERNAL_USAGE_OPT_TO'),
+                    demandOption: true,
+                })
+                .option('from', {
+                    type: 'string',
+                    alias: 'f',
+                    describe: $t('CMD_EXTERNAL_USAGE_OPT_FROM'),
+                    default: 'EN',
+                })
+                .option('prefix', {
+                    type: 'string',
+                    alias: 'p',
+                    describe: $t('CMD_EXTERNAL_USAGE_OPT_PREFIX'),
+                })
+                .option('force', {
+                    type: 'boolean',
+                    describe: $t('CMD_EXTERNAL_USAGE_OPT_FORCE'),
+                    default: false,
+                })
+                .example(chalk.yellow('$ bh external --to="cns"'), $t('CMD_EXTERNAL_USAGE_EG_TO_CODE'))
+                .example(chalk.yellow('$ bh external --to="cns" --prefix="[CNS]"'), $t('CMD_EXTERNAL_USAGE_EG_PREFIX'))
+                .example(chalk.yellow('$ bh external --to="cns" --force'), $t('CMD_EXTERNAL_USAGE_EG_FORCE'))
+                .example(chalk.yellow('$ bh ext -f en -t cns -p [CNS]'), $t('CMD_USAGE_EG_ALIAS'))
+                .epilog(chalk.grey(`* ${$t('CMD_INFO_USAGE_EPILOG_WORKSHOP')}`));
+        },
+        boundary<[ExternalCommandOptions]>(external),
+    )
+    .command(
+        ['language [codeOrName]', 'lang'],
+        $t('CMD_LANGUAGE_USAGE'),
+        (yargs: Argv<LanguageCommandOptions>) => {
+            return yargs
+                .option('code-or-name', {
+                    type: 'string',
+                    describe: $t('CMD_LANGUAGE_USAGE_OPT_CODE_OR_NAME'),
+                })
+                .example(chalk.yellow('$ bh language'), $t('CMD_LANGUAGE_USAGE_EG'))
+                .example(chalk.yellow('$ bh language cns'), $t('CMD_LANGUAGE_USAGE_EG_TARGET'))
+                .example(chalk.yellow('$ bh lang'), $t('CMD_USAGE_EG_ALIAS'));
+        },
+        boundary<[LanguageCommandOptions]>(language),
+    )
     .example([
-        [chalk.yellow('$ bh -h'), locale.USAGE_EG_HELP],
-        [chalk.yellow('$ bh language -h'), locale.USAGE_EG_COMMAND_LANG],
-        [chalk.yellow('$ bh [command] -h'), locale.USAGE_EG_COMMAND],
+        [chalk.yellow('$ bh -h'), $t('CMD_USAGE_EG_HELP')],
+        [chalk.yellow('$ bh language -h'), $t('CMD_USAGE_EG_LANGUAGE_HELP')],
+        [chalk.yellow('$ bh [command] -h'), $t('CMD_USAGE_EG_COMMAND_HELP')],
+        [chalk.yellow('$ bh [command] --engine google'), $t('CMD_USAGE_EG_GOOGLE_ENGINE')],
+        [chalk.yellow('$ bh [command] --engine deeplx'), $t('CMD_USAGE_EG_DEEPLX_ENGINE')],
     ])
+    .epilog(chalk.grey(`* ${$t('CMD_USAGE_EPILOG_A')}`))
+    .epilog(chalk.grey(`* ${$t('CMD_USAGE_EPILOG_B')}`))
+    .epilog(chalk.grey(`* ${$t('CMD_USAGE_EPILOG_C')}`))
+    .epilog(chalk.grey(`* ${$t('CMD_USAGE_EPILOG_D')}`))
+    .epilog(chalk.grey(`* ${$t('CMD_USAGE_EPILOG_E')}`))
+    .epilog(chalk.grey(`* ${$t('CMD_USAGE_EPILOG_F')}`))
+    .demandCommand()
     .alias({
         h: 'help',
         v: 'version',
@@ -203,24 +235,15 @@ yargs(hideBin(process.argv))
     .completion()
     .parse();
 
-function boundary<T extends any[] = any[], R = any>(fn: (...args: T) => R | void | Promise<R | void>) {
-    return async function (...args: T): Promise<R | void> {
+function boundary<T extends any[] = any[], R = any>(function_: (...arguments_: T) => R | void | Promise<R | void>) {
+    return async function (...arguments_: T): Promise<R | void> {
         try {
-            return await fn.apply(null, args);
-        } catch (err: unknown) {
-            if (process.env.NODE_ENV === 'production') {
-                console.log(
-                    chalk.black.bgRed(' UNCAUGHT ERROR '),
-                    '\n',
-                    (
-                        err as Error
-                    )?.message,
-                );
-                process.exit(1);
-            } else {
-                console.log(err);
-                process.exit(1);
-            }
+            await function_(...arguments_);
+            process.exit(0);
+        } catch (error: unknown) {
+            const exception = new Exception(error as Error);
+            console.log(exception);
+            process.exit(1);
         }
     };
 }

@@ -1,119 +1,97 @@
-import fs from 'node:fs';
+import path from 'node:path';
 import cloneDeep from 'lodash.clonedeep';
 import get from 'lodash.get';
 import set from 'lodash.set';
 import uniqBy from 'lodash.uniqby';
-import { ErrorCodes } from '../shared/index.js';
-import { ensure, isObject, type NodeError, readFileSync, run, XML } from '../utils/index.js';
+import { type Arrayable, isPlainObject } from '../utils';
+import ModuleXml, { type LiteralBoolean, type XmlStandardOptions } from './module-xml';
 
-interface LanguageDataXmlHeader {
-    '@_version': '1.0';
-    '@_encoding': 'utf-16';
-}
-
-interface LanguageDataXmlItem {
+export interface LanguageFileOptions {
     '@_xml_path': string;
 }
 
-interface LanguageDataXmlData {
-    LanguageFile: LanguageDataXmlItem | LanguageDataXmlItem[];
+export interface LanguageDataOptions {
+    LanguageFile: Arrayable<LanguageFileOptions> | '';
     '@_id': string;
+    '@_name'?: string;
+    '@_subtitle_extension'?: string;
+    '@_supported_iso'?: string;
+    '@_under_development'?: LiteralBoolean;
 }
 
-export interface LanguageDataXml {
-    '?xml': LanguageDataXmlHeader;
-    LanguageData: LanguageDataXmlData;
+export interface LanguageDataXmlOptions extends XmlStandardOptions {
+    LanguageData: LanguageDataOptions;
 }
 
-const LANGUAGE_DATA_XML_FILE_NAME = 'language_data.xml';
-
-const createXmlHeader = (): LanguageDataXmlHeader => ({
-    '@_version': '1.0',
-    '@_encoding': 'utf-16',
-});
-
-const createLanguageFile = (code: string, file: string): LanguageDataXmlItem => {
-    return { '@_xml_path': `${code}/${file}` };
-};
-
-const createLanguageFiles = (code: string, files: string[]): LanguageDataXmlItem[] => {
-    return files.map((item) => createLanguageFile(code, item));
-};
-
-const createLanguageData = (name: string, code: string, files: string[]): LanguageDataXmlData => ({
-    LanguageFile: createLanguageFiles(code, files),
-    '@_id': name,
-});
-
-const createWithTemplate = (name: string, code: string, files: string[]): LanguageDataXml => ({
-    '?xml': createXmlHeader(),
-    LanguageData: createLanguageData(name, code, files),
-});
-
-const resolveFilePath = (directoryPath: string) => {
-    return `${directoryPath}\\${LANGUAGE_DATA_XML_FILE_NAME}`;
-};
-
-const normalizeFileName = (name: string) => {
-    const nextName = name.replace(/^\/+/, '');
-    if (/.xml$/.test(nextName)) {
-        return nextName;
+class LanguageDataXml extends ModuleXml<LanguageDataXmlOptions> {
+    resolve(directoryPath: string) {
+        return path.resolve(directoryPath, 'language_data.xml');
     }
 
-    return `${nextName}.xml`;
-};
+    create(name: string, code: string, files: string[]): LanguageDataXmlOptions {
+        const list = files.map((item) => this.normalizeFilename(item));
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        return { ...this.createHeader(), LanguageData: this.createLanguageData(name, code, list) };
+    }
 
-export function create(langName: string, langCode: string, langFiles: string[]) {
-    ensure(
-        langName && langCode && langFiles?.length,
-        'Invalid LanguageName/LanguageCode or empty files',
-        ErrorCodes.EINVAL_LANG_FILE_EMPTY,
-    );
+    merge(data: LanguageDataXmlOptions, source?: LanguageDataXmlOptions): LanguageDataXmlOptions {
+        if (!source) return data;
 
-    const files = langFiles.map(normalizeFileName);
-    return createWithTemplate(langName, langCode, files);
+        const languageFiles = get(data, 'LanguageData.LanguageFile', []);
+        const languageFileList = this.normalizeLanguageFile(languageFiles);
+
+        const sourceFiles = get(source, 'LanguageData.LanguageFile', []);
+        const sourceFileList = this.normalizeLanguageFile(sourceFiles);
+
+        const compositeFiles = uniqBy([...languageFileList, ...sourceFileList], '@_xml_path');
+        return set(cloneDeep(data), 'LanguageData.LanguageFile', compositeFiles);
+    }
+
+    read(directoryPath: string) {
+        return super.read(this.resolve(directoryPath));
+    }
+
+    write(directoryPath: string, data: LanguageDataXmlOptions) {
+        return super.write(this.resolve(directoryPath), data);
+    }
+
+    normalizeFilename(filename: string) {
+        const _filename = filename.replace(/^[/\\]+/, '');
+        if (/.xml$/.test(_filename)) {
+            return _filename;
+        }
+
+        return `${_filename}.xml`;
+    }
+
+    normalizeLanguageFile(files: LanguageDataOptions['LanguageFile']) {
+        if (typeof files === 'string') return [];
+        if (isPlainObject<LanguageFileOptions>(files)) return [files];
+        return files;
+    }
+
+    protected createLanguageData(name: string, code: string, files: string[]): LanguageDataOptions {
+        /* eslint-disable @typescript-eslint/naming-convention */
+        return {
+            LanguageFile: this.createLanguageFiles(code, files),
+            '@_id': name,
+            '@_name': name,
+        };
+        /* eslint-enable @typescript-eslint/naming-convention */
+    }
+
+    protected createLanguageFiles(code: string, files: string[]) {
+        if (files.length === 0) return '';
+
+        if (files.length === 1) return this.createLanguageFile(code, files[0]);
+
+        return files.map((file) => this.createLanguageFile(code, file));
+    }
+
+    protected createLanguageFile(code: string, file: string) {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        return { '@_xml_path': `${code}/${file}` };
+    }
 }
 
-export function merge(data: LanguageDataXml, source: LanguageDataXml) {
-    const languageFiles = get(data, 'LanguageData.LanguageFile', []);
-    const languageFileList = isObject<LanguageDataXmlItem>(languageFiles) ? [languageFiles] : languageFiles;
-
-    const sourceFiles = get(source, 'LanguageData.LanguageFile', []);
-    const sourceFileList = isObject<LanguageDataXmlItem>(sourceFiles) ? [sourceFiles] : sourceFiles;
-
-    const combinedFiles = uniqBy([...languageFileList, ...sourceFileList], '@_xml_path');
-    return set(cloneDeep(data), 'LanguageData.LanguageFile', combinedFiles);
-}
-
-export function check(directoryPath: string): boolean {
-    const filePath = resolveFilePath(directoryPath);
-    const [error] = run<void, NodeError>(fs.accessSync, filePath, fs.constants.R_OK | fs.constants.W_OK);
-    return !error;
-}
-
-export function read(directoryPath: string): LanguageDataXml {
-    const filePath = resolveFilePath(directoryPath);
-    const [accessError] = run<void, NodeError>(fs.accessSync, filePath, fs.constants.R_OK | fs.constants.W_OK);
-    ensure(
-        !accessError,
-        accessError?.message ?? 'No such file or directory',
-        accessError?.code ?? ErrorCodes.ENOENT_FILE,
-    );
-
-    const content = readFileSync(filePath);
-    const [parseError, xmlData] = run<LanguageDataXml, NodeError>(XML.parse, content);
-    ensure(!parseError, parseError?.message ?? 'Unable to parse language_data.xml', ErrorCodes.EINVAL_XML_DATA);
-
-    return xmlData;
-}
-
-export function write(directoryPath: string, content: LanguageDataXml) {
-    const [accessError] = run<void, NodeError>(fs.accessSync, directoryPath, fs.constants.R_OK | fs.constants.W_OK);
-    ensure(!accessError, accessError?.message ?? 'Permission denied', accessError?.code ?? ErrorCodes.ENOENT_FILE);
-
-    const filePath = resolveFilePath(directoryPath);
-    const fileContent = XML.stringify<LanguageDataXml>(content);
-
-    const [writeError] = run<void, NodeError>(fs.writeFileSync, filePath, fileContent, 'utf8');
-    ensure(!writeError, writeError?.message ?? 'Permission denied', writeError?.code ?? ErrorCodes.EACCES_FILE);
-}
+export default LanguageDataXml;

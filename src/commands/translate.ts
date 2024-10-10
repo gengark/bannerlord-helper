@@ -1,87 +1,112 @@
-import partialRight from 'lodash.partialright';
-import { getTranslationFileName, type ModuleInfo, renderMarkdown } from '../helper/index.js';
-import locale from '../locale/index.js';
-import { Languages } from '../shared/index.js';
-import { type NodeError, to } from '../utils/index.js';
-import commonWorkflow from './_internal/common-workflow.js';
-import getNativeModuleSearch from './_internal/get-native-module-search.js';
-import getNativeModules from './_internal/get-native-modules.js';
-import getTranslateModules from './_internal/get-translate-modules.js';
-import normalizeLanguageData from './_internal/normalize-language-data.js';
-import type { ModuleDataDictionary } from './_internal/normalize-module-data.js';
-import translateLanguageData from './_internal/translate-language-data.js';
+import ora from 'ora';
+import { type ModuleTranslateStatOptions, renderModuleTranslateStat } from '../components';
+import {
+    choiceModuleTemplateFiles,
+    normalizeTranslateOptions,
+    searchNativeModules,
+    writeLanguageDataFile,
+    writeTranslationStringsFile,
+} from '../core';
+import {
+    getLanguageTargetPath,
+    getTranslationFilename,
+    type NativeModuleOptions,
+    restoreTranslationFilename,
+    useDurationPrint,
+} from '../helper';
+import clearLanguagesDirectory from '../helper/clear-languages-directory';
+import { $t } from '../shared';
+import { ensureDirectory, op, pathExist, to } from '../utils';
 
-export interface TranslateCommandOption {
-    to: string;
+export interface TranslateCommandOptions {
+    to?: string;
+    engine?: string;
     from?: string;
     prefix?: string;
-    keywords?: string;
-    google?: boolean;
+    force?: boolean;
 }
 
-async function translate({ to: target, from: source = 'EN', prefix = '', keywords, google }: TranslateCommandOption) {
-    const [targetOption] = Languages.getLanguages([target.toLowerCase()]);
-    const [sourceOption] = Languages.getLanguages([source.toLowerCase()]);
-    if (!targetOption || !sourceOption) {
-        console.log(locale.EINVAL_LANG_CODE_OR_NAME);
+async function translate({ engine, to: target, from: source, prefix, force }: TranslateCommandOptions = {}) {
+    const spinner = ora({ color: 'cyan' });
+    if (!target) {
+        spinner.fail($t('EINVAL_MISSING_TO'));
         return;
     }
 
-    const [selectError, module] = await to<ModuleInfo>(
-        commonWorkflow<ModuleInfo>(
-            [getNativeModules, partialRight(getTranslateModules<ModuleInfo>, google), getNativeModuleSearch],
-            keywords,
-            {
-                messages: [
-                    locale.SPIN_NATIVE_MOD_SEARCH,
-                    `${locale.SPIN_MODULE_NAME_TRANSLATE} > ${google ? 'Google' : 'Bing'}`,
-                ],
-                translateIndex: 1,
-            },
-        ),
-    );
-    if (selectError || !module) return;
+    const [langError, options] = op(normalizeTranslateOptions, { engine, source, target });
+    if (langError) {
+        spinner.fail(langError.message);
+        return;
+    }
 
-    const moduleDataPath = `${module.path}\\ModuleData`;
-    const [translateError, dictionary] = await to<ModuleDataDictionary, NodeError>(
-        commonWorkflow<any>(
-            [
-                partialRight(normalizeLanguageData, sourceOption, targetOption),
-                partialRight(translateLanguageData, moduleDataPath, sourceOption, targetOption, prefix, google),
-            ],
-            moduleDataPath,
-            {
-                messages: [
-                    locale.SPIN_LOCALE_NORMALIZE_XML,
-                    locale.SPIN_LOCALE_TRANSLATE_XML,
-                    locale.SPIN_LOCALE_TRANSLATE_XML,
-                ],
-                translateIndex: 1,
-            },
-        ),
-    );
-    if (translateError || !dictionary) return;
+    const { translateEngine, translateFrom = 'EN', translateTo: originalTranslateTo } = options;
+    const translateTo = originalTranslateTo!;
 
-    const title = `## ${locale.LABEL_MD_TRANSLATION_FILE}`;
-
-    const fileKeys = [...dictionary.keys()];
-    const fileRows = fileKeys.map((key) => {
-        const count = Object.keys(dictionary.get(key) || {}).length;
-        const targetPath = `\\${module.id}\\ModuleData\\${targetOption.code}\\${getTranslationFileName(
-            key,
-            targetOption.code,
-        )}`;
-        return `| \`${key}\` | ${count} | ${targetPath} |`;
+    const module: (NativeModuleOptions & { nativeName: string }) | undefined = await searchNativeModules({
+        engine: translateEngine,
     });
+    if (!module) return;
 
-    const tableHeader = `|${locale.LABEL_MD_FILE}|${locale.LABEL_MD_ROW}|${locale.LABEL_MD_PATH}|`;
-    const tableSeparator = '| - | - | - |';
-    const tableBodyFixed = '| | | |';
+    const { path } = module;
+    const moduleDataPath = `${path}\\ModuleData`;
 
-    const md = await renderMarkdown(
-        `${title}\n\n${tableHeader}\n${tableSeparator}\n${tableBodyFixed}\n${fileRows.join('\n')}`,
-    );
+    const sourcePath = getLanguageTargetPath(moduleDataPath, translateFrom);
+    const [error, files] = await to(choiceModuleTemplateFiles(sourcePath, translateFrom));
+    if (error) {
+        spinner.fail(error.message);
+        return;
+    }
+
+    const targetPath = getLanguageTargetPath(moduleDataPath, translateTo);
+    ensureDirectory(targetPath);
+
+    if (force) {
+        const [error] = await to(clearLanguagesDirectory(targetPath, 'xml'));
+        if (error) return;
+    }
+
+    const stats: ModuleTranslateStatOptions[] = [];
+    const filenameDictionary = new Map<string, string>();
+
+    let currentIndex = 0;
+    const spinnerMessage = $t('CMD_TRANSLATE_TRANSLATE_TEMPLATE_FILE');
+    const getSpinnerText = () => `${spinnerMessage} (${currentIndex++}/${files.length})`;
+
+    const printDuration = useDurationPrint();
+    spinner.start(getSpinnerText());
+
+    for (const file of files) {
+        const filename = getTranslationFilename(restoreTranslationFilename(file), translateTo);
+
+        const isExisted = pathExist(`${sourcePath}\\${file}`);
+        if (!isExisted) {
+            stats.push({ filename, status: 404 });
+            spinner.text = getSpinnerText();
+            continue;
+        }
+
+        filenameDictionary.set(file, filename);
+
+        const [error, stat] = await to<Omit<ModuleTranslateStatOptions, 'filename' | 'status'>>(
+            writeTranslationStringsFile(`${sourcePath}\\${file}`, `${targetPath}\\${filename}`, {
+                engine: translateEngine,
+                to: translateTo,
+                from: translateFrom,
+                prefix,
+            }),
+        );
+        stats.push(error ? { filename, status: 500 } : { filename, status: 200, ...stat });
+        spinner.text = getSpinnerText();
+    }
+
+    spinner.succeed(getSpinnerText());
+
+    const standardFiles = files.map((item) => filenameDictionary.get(item)).filter(Boolean) as string[];
+    writeLanguageDataFile(targetPath, translateTo, standardFiles);
+
+    const md = await renderModuleTranslateStat(stats);
     console.log(md);
+    printDuration();
 }
 
 export default translate;

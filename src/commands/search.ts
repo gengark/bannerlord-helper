@@ -1,59 +1,45 @@
-import partialRight from 'lodash.partialright';
-import { type NexusModsOption } from '../api/index.js';
-import { browserRemotePage, renderMarkdown } from '../helper/index.js';
-import locale from '../locale/index.js';
-import { type NodeError, type Noop, to } from '../utils/index.js';
-import commonWorkflow from './_internal/common-workflow.js';
-import getRemoteModuleMarkdown from './_internal/get-remote-module-markdown.js';
-import getRemoteModuleSelected from './_internal/get-remote-module-selected.js';
-import getRemoteModules from './_internal/get-remote-modules.js';
-import getTranslateModules from './_internal/get-translate-modules.js';
-import rewriteModuleMarkdown from './_internal/rewrite-module-markdown.js';
-import translateModuleMarkdown from './_internal/translate-module-markdown.js';
+import merge from 'lodash.merge';
+import ora from 'ora';
+import { nexusmodApi, type NexusmodModuleOptions } from '../api';
+import { renderModulePage } from '../components';
+import { normalizeTranslateOptions, searchNexusmodModules } from '../core';
+import useDurationPrint from '../helper/use-duration-print';
+import { $t } from '../shared';
+import { op } from '../utils';
 
-export interface SearchCommandOption {
-    query: string;
-    openRouter?: string;
-    open?: boolean;
-    google?: boolean;
+export interface SearchCommandOptions {
+    language?: string;
+    keywords?: string;
+    engine?: string;
 }
 
-async function search({ query, openRouter, open: isOpen, google }: SearchCommandOption) {
-    const suffix = ` > ${google ? 'Google' : 'Bing'}`;
-    const messages = [locale.SPIN_NEXUSMOD_SEARCH, `${locale.SPIN_MODULE_NAME_TRANSLATE}${suffix}`, undefined];
-    const pipeline: Noop[] = [
-        getRemoteModules,
-        partialRight(getTranslateModules<NexusModsOption>, google),
-        getRemoteModuleSelected,
-    ];
-    const translateIndex = [1];
-
-    if (isOpen) {
-        messages.push(locale.SPIN_BROWSE_PAGE);
-        pipeline.push(browserRemotePage);
-    } else {
-        messages.push(locale.SPIN_READ_PAGE);
-        pipeline.push(getRemoteModuleMarkdown);
-        if (openRouter) {
-            messages.push(`${locale.SPIN_MODULE_PAGE_AI} > OpenRouter`);
-            pipeline.push(partialRight(rewriteModuleMarkdown, openRouter));
-        } else {
-            messages.push(`${locale.SPIN_MODULE_PAGE_TRANSLATE} ${suffix}`);
-            pipeline.push(partialRight(translateModuleMarkdown, google));
-            translateIndex.push(4);
-        }
-
-        messages.push(locale.SPIN_RENDER_PAGE);
-        pipeline.push(renderMarkdown);
+async function search({ language, engine, keywords }: SearchCommandOptions = {}) {
+    if (!keywords) return;
+    const spinner = ora({ color: 'cyan' });
+    const [langError, options] = op(normalizeTranslateOptions, { engine, target: language });
+    if (langError) {
+        spinner.fail(langError.message);
+        return;
     }
 
-    const [error, content] = await to<string | undefined, NodeError>(
-        commonWorkflow<string>(pipeline, query, { messages, translateIndex }),
-    );
+    const { translateEngine, translateTo } = options;
 
-    if (error || !content) return;
+    const module: (NexusmodModuleOptions & { nativeName: string }) | undefined = await searchNexusmodModules({
+        keywords,
+        engine: translateEngine,
+        to: translateTo,
+    });
+    if (!module) return;
 
-    console.log('\n', content);
+    const printDuration = useDurationPrint();
+    spinner.start($t('CMD_SEARCH_QUERY_MODULE_INFORMATION'));
+    const remoteModule = await nexusmodApi.getModulePage(module.id);
+    spinner.stop();
+
+    const compositeInfo = merge(module, remoteModule, { engine: translateEngine, target: translateTo });
+    const md = await renderModulePage(compositeInfo);
+    console.log(md);
+    printDuration();
 }
 
 export default search;

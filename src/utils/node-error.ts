@@ -7,21 +7,20 @@ import Exception from '@kabeep/exception';
  * @extends Error
  *
  * @param {string} message - The error message.
- * @param {string} [code='EUNKNOWN'] - The error code. Defaults to 'EUNKNOWN' if not provided.
+ * @param {NodeJS.ErrnoException['code']} [code='EUNKNOWN'] - The error code. Defaults to 'EUNKNOWN' if not provided.
  */
 class NodeError extends Exception {
     /**
      * Creates an instance of `NodeError`.
      *
      * @param {string} message - The error message.
-     * @param {string} [code='EUNKNOWN'] - The error code. Defaults to 'EUNKNOWN'.
+     * @param {NodeJS.ErrnoException['code']} [code='EUNKNOWN'] - The error code. Defaults to 'EUNKNOWN'.
      */
     constructor(
-        message: string,
-        public code = 'EUNKNOWN',
+        message: string | Error,
+        public code: NodeJS.ErrnoException['code'] = 'EUNKNOWN',
     ) {
         super(message, 'black.bgRed');
-        this.name = 'NodeError';
     }
 }
 

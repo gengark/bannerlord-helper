@@ -1,75 +1,78 @@
-import partialRight from 'lodash.partialright';
-import { getTranslationFileName, type ModuleInfo, renderMarkdown } from '../helper/index.js';
-import locale from '../locale/index.js';
-import { Languages } from '../shared/index.js';
-import { type NodeError, to } from '../utils/index.js';
-import commonWorkflow from './_internal/common-workflow.js';
-import generateModuleData from './_internal/generate-module-data.js';
-import getNativeModuleSearch from './_internal/get-native-module-search.js';
-import getNativeModules from './_internal/get-native-modules.js';
-import getTranslateModules from './_internal/get-translate-modules.js';
-import normalizeModuleData, { type ModuleDataDictionary } from './_internal/normalize-module-data.js';
+import ora from 'ora';
+import { renderModuleGenerateStat } from '../components';
+import {
+    choiceModuleDataFiles,
+    normalizeTranslateOptions,
+    writeLanguageDataFile,
+    writeLanguageStringsFile,
+} from '../core';
+import { getLanguageTargetPath, getModuleDataItems, getTranslationFilename, useDurationPrint } from '../helper';
+import clearLanguagesDirectory from '../helper/clear-languages-directory';
+import { $t } from '../shared';
+import { ensureDirectory, op, to } from '../utils';
 
-export interface GenerateCommandOption {
+export interface GenerateCommandOptions {
+    engine?: string;
+    language?: string;
     to?: string;
-    keywords?: string;
-    google?: boolean;
+    force?: boolean;
 }
 
-async function generate({ to: target = 'EN', keywords, google = false }: GenerateCommandOption): Promise<void> {
-    const [targetOption] = Languages.getLanguages([target.toLowerCase()]);
-    if (!targetOption) {
-        console.log(locale.EINVAL_LANG_CODE_OR_NAME);
+async function generate({ engine, language, to: target, force }: GenerateCommandOptions = {}) {
+    const spinner = ora({ color: 'cyan' });
+    const [langError, options] = op(normalizeTranslateOptions, { engine, target, source: language });
+    if (langError) {
+        spinner.fail(langError.message);
         return;
     }
 
-    const [selectError, module] = await to<ModuleInfo>(
-        commonWorkflow<ModuleInfo>(
-            [getNativeModules, partialRight(getTranslateModules<ModuleInfo>, google), getNativeModuleSearch],
-            keywords,
-            {
-                messages: [
-                    locale.SPIN_NATIVE_MOD_SEARCH,
-                    `${locale.SPIN_MODULE_NAME_TRANSLATE} > ${google ? 'Google' : 'Bing'}`,
-                ],
-                translateIndex: 1,
-            },
-        ),
-    );
-    if (selectError || !module) return;
+    const { translateEngine, translateFrom, translateTo = 'EN' } = options;
 
-    const moduleDataPath = `${module.path}\\ModuleData`;
-    const [generateError, dictionary] = await to<ModuleDataDictionary, NodeError>(
-        commonWorkflow<ModuleDataDictionary>(
-            [
-                partialRight(normalizeModuleData, targetOption),
-                partialRight(generateModuleData, moduleDataPath, targetOption),
-            ],
-            moduleDataPath,
-            {
-                messages: [locale.SPIN_LOCALE_NORMALIZE_XML, locale.SPIN_GENERATE_NORMALIZE_XML],
-            },
-        ),
-    );
-    if (generateError || !dictionary) return;
+    const { path: modulePath, files } =
+        (await choiceModuleDataFiles({ engine: translateEngine, to: translateFrom })) ?? {};
+    if (!modulePath || !files) return;
+    const moduleDataPath = `${modulePath}\\ModuleData`;
 
-    const title = `## ${locale.LABEL_MD_GENERATE_FILE}`;
+    const languagesPath = getLanguageTargetPath(moduleDataPath, translateTo);
+    ensureDirectory(languagesPath);
 
-    const fileKeys = [...dictionary.keys()];
-    const fileRows = fileKeys.map((key) => {
-        const count = Object.keys(dictionary.get(key) || {}).length;
-        const targetPath = `\\${module.id}\\ModuleData\\${targetOption.code}\\${getTranslationFileName(key, targetOption.code)}`;
-        return `| \`${key}\` | ${count} | ${targetPath} |`;
-    });
+    if (force) {
+        const [error] = await to(clearLanguagesDirectory(languagesPath, 'xml'));
+        if (error) return;
+    }
 
-    const tableHeader = `|${locale.LABEL_MD_FILE}|${locale.LABEL_MD_ROW}|${locale.LABEL_MD_PATH}|`;
-    const tableSeparator = '| - | - | - |';
-    const tableBodyFixed = '| | | |';
+    let currentIndex = 0;
+    const spinnerMessage = $t('CMD_GENERATE_GEN_TRANSLATION_TEMPLATE');
+    const getSpinnerText = () => `${spinnerMessage} (${currentIndex++}/${files.length})`;
 
-    const md = await renderMarkdown(
-        `${title}\n\n${tableHeader}\n${tableSeparator}\n${tableBodyFixed}\n${fileRows.join('\n')}`,
-    );
+    const printDuration = useDurationPrint();
+    spinner.start(getSpinnerText());
+
+    const stats = [];
+    const filenameDictionary = new Map<string, string>();
+    for (const file of files) {
+        const filename = getTranslationFilename(file, translateTo);
+        const currentFilepath = `${languagesPath}\\${filename}`;
+        const items = getModuleDataItems(moduleDataPath, file);
+        if (items.size === 0) {
+            stats.push({ filename, targetIds: [], ids: [], appendIds: [] });
+            continue;
+        }
+
+        filenameDictionary.set(file, filename);
+        const stat = writeLanguageStringsFile(currentFilepath, translateTo, items);
+        stats.push({ filename, ...stat });
+        spinner.text = getSpinnerText();
+    }
+
+    spinner.succeed(getSpinnerText());
+
+    const standardFiles = files.map((item) => filenameDictionary.get(item)).filter(Boolean) as string[];
+    writeLanguageDataFile(languagesPath, translateTo, standardFiles);
+
+    const md = await renderModuleGenerateStat(stats);
     console.log(md);
+    printDuration();
 }
 
 export default generate;
