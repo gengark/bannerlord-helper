@@ -8,7 +8,7 @@ import itIT from './it-IT';
 import jaJP from './ja-JP';
 import koKR from './ko-KR';
 import plPL from './pl-PL';
-import ptPT from './pt-pT';
+import ptPT from './pt-PT';
 import ruRU from './ru-RU';
 import trTR from './tr-TR';
 import zhCN from './zh-CN';
