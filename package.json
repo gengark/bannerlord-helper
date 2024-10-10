@@ -1,7 +1,7 @@
 {
     "name": "bannerlord-helper",
-    "description": "A utility for NodeJS Cli for Mount & Blade II: Bannerlord",
-    "version": "0.1.2",
+    "description": "A collection of useful tools dedicated to making i18n works easier for Mount & Blade II: Bannerlord mod creators",
+    "version": "0.2.0",
     "type": "module",
     "main": "./dist/index.js",
     "types": "./dist/index.d.ts",
@@ -74,6 +74,18 @@
     "homepage": "https://github.com/marowaki/bannerlord-helper#readme",
     "repository": "git@github.com:marowaki/bannerlord-helper.git",
     "bugs": "https://github.com/marowaki/bannerlord-helper/issue",
+    "keywords": [
+        "cli",
+        "bannerlord",
+        "mod",
+        "bannerlord-mod",
+        "helper",
+        "utility",
+        "i18n",
+        "translate",
+        "google",
+        "microsoft"
+    ],
     "engines": {
         "node": ">=18"
     },
