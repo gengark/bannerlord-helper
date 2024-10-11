@@ -5,9 +5,7 @@
     "type": "module",
     "main": "./dist/index.js",
     "types": "./dist/index.d.ts",
-    "files": [
-        "dist"
-    ],
+    "files": ["dist"],
     "bin": {
         "bh": "./dist/bannerlord-helper.js"
     },
@@ -16,8 +14,7 @@
         "lint": "xo src/**/*.ts bin/**/*.ts --fix",
         "pretest": "npm run lint",
         "watch": "tsup --watch",
-        "build": "npm run clean && tsup",
-        "clean": "rimraf dist",
+        "build": "tsup",
         "locale": "localize src/locale/en-US.ts -t de-DE es-ES fr-FR it-IT ja-JP ko-KR pl-PL pt-PT ru-RU tr-TR zh-CN zh-TW",
         "prepare": "husky"
     },
