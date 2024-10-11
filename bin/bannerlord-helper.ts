@@ -247,3 +247,20 @@ function boundary<T extends any[] = any[], R = any>(function_: (...arguments_: T
         }
     };
 }
+
+export {
+    type ExternalCommandOptions,
+    type GenerateCommandOptions,
+    external,
+    type IdentifierCommandOptions,
+    generate,
+    type InfoCommandOptions,
+    identifier,
+    type SearchCommandOptions,
+    info,
+    type LanguageCommandOptions,
+    search,
+    type TranslateCommandOptions,
+    language,
+    translate,
+} from '../src';
