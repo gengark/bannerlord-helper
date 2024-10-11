@@ -67,10 +67,27 @@
         "typescript": "^5.6.2",
         "xo": "^0.58.0"
     },
-    "author": "marowaki",
+    "author": {
+        "name": "gengarr",
+        "email": "97z4moon@gmail.com",
+        "url": "https://github.com/gengark"
+    },
+    "contributors": [
+        {
+            "name": "dontkillchicken",
+            "email": "1587409536@qq.com",
+            "url": "https://github.com/dontkillchicken"
+        }
+    ],
     "homepage": "https://github.com/marowaki/bannerlord-helper#readme",
-    "repository": "git@github.com:marowaki/bannerlord-helper.git",
-    "bugs": "https://github.com/marowaki/bannerlord-helper/issue",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/yourname/yourrepo.git"
+    },
+    "bugs": {
+        "url": "https://github.com/marowaki/bannerlord-helper/issue",
+        "email": "97z4moon@gmail.com"
+    },
     "keywords": [
         "cli",
         "bannerlord",
@@ -86,5 +103,6 @@
     "engines": {
         "node": ">=18"
     },
+    "os": ["win32"],
     "license": "MIT"
 }
