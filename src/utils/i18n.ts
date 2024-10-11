@@ -5,11 +5,9 @@ interface NestedRecord {
     [key: string]: string | NestedRecord;
 }
 
-type Join<K, P> = K extends string | number ? (P extends string | number ? `${K}.${P}` : never) : never;
-
 type Paths<T> = T extends object
     ? {
-          [K in keyof T]: T[K] extends object ? Join<K, Paths<T[K]>> : K;
+          [K in keyof T]: K;
       }[keyof T]
     : never;
 
