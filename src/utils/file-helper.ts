@@ -116,3 +116,19 @@ export function pathExist(filepath: string) {
     const [error] = op(fs.accessSync, filepath, fs.constants.R_OK);
     return !error;
 }
+
+export function readdirFiles(directoryPath: string, options: { extensions?: string[]; recursive?: boolean } = {}) {
+    const files = fs.readdirSync(directoryPath, { withFileTypes: true, recursive: options.recursive });
+
+    const result: string[] = [];
+    for (const file of files) {
+        if (!file.name || !file.isFile?.()) continue;
+
+        const fileExtension = file.name.split('.').pop();
+        if (!fileExtension || !options.extensions?.includes(fileExtension)) continue;
+
+        result.push(file.name);
+    }
+
+    return result;
+}

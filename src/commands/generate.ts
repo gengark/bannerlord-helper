@@ -66,8 +66,10 @@ async function generate({ engine, language, to: target, force }: GenerateCommand
 
     spinner.succeed(countIncrease(true));
 
-    const standardFiles = files.map((item) => filenameDictionary.get(item)).filter(Boolean) as string[];
-    writeLanguageDataFile(languagesPath, translateTo, standardFiles);
+    if (translateTo !== 'EN') {
+        const standardFiles = files.map((item) => filenameDictionary.get(item)).filter(Boolean) as string[];
+        writeLanguageDataFile(languagesPath, translateTo, standardFiles);
+    }
 
     const md = await renderModuleGenerateStat(stats);
     console.log(md);

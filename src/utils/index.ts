@@ -7,7 +7,7 @@ export { default as delay } from './delay';
 
 export { default as ensure } from './ensure';
 
-export { clearDirectoryFile, ensureDirectory, pathExist, readFile } from './file-helper';
+export { clearDirectoryFile, ensureDirectory, pathExist, readFile, readdirFiles } from './file-helper';
 
 export { default as fuzzySearch } from './fuzzy-search';
 
