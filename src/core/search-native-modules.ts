@@ -48,7 +48,7 @@ async function searchNativeModules({ engine, to: target }: SearchNativeModulesOp
                     return options;
                 }
 
-                return options.filter((item) => fuzzySearch(input, item.name));
+                return options.filter((item) => fuzzySearch(input.toLowerCase(), item.name.toLowerCase()));
             },
         }),
     );
