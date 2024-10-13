@@ -79,13 +79,13 @@
             "url": "https://github.com/dontkillchicken"
         }
     ],
-    "homepage": "https://github.com/marowaki/bannerlord-helper#readme",
+    "homepage": "https://github.com/gengark/bannerlord-helper#readme",
     "repository": {
         "type": "git",
-        "url": "https://github.com/yourname/yourrepo.git"
+        "url": "https://github.com/gengark/bannerlord-helper.git"
     },
     "bugs": {
-        "url": "https://github.com/marowaki/bannerlord-helper/issue",
+        "url": "https://github.com/gengark/bannerlord-helper/issue",
         "email": "97z4moon@gmail.com"
     },
     "keywords": [
