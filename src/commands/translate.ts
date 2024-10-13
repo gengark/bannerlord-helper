@@ -8,13 +8,13 @@ import {
     writeTranslationStringsFile,
 } from '../core';
 import {
+    clearLanguagesDirectory,
     getLanguageTargetPath,
     getTranslationFilename,
     type NativeModuleOptions,
     restoreTranslationFilename,
-    useDurationPrint,
 } from '../helper';
-import clearLanguagesDirectory from '../helper/clear-languages-directory';
+import { useCountProgressMessage, useDurationPrint } from '../hooks';
 import { $t } from '../shared';
 import { ensureDirectory, op, pathExist, to } from '../utils';
 
@@ -68,12 +68,9 @@ async function translate({ engine, to: target, from: source, prefix, force }: Tr
     const stats: ModuleTranslateStatOptions[] = [];
     const filenameDictionary = new Map<string, string>();
 
-    let currentIndex = 0;
-    const spinnerMessage = $t('CMD_TRANSLATE_TRANSLATE_TEMPLATE_FILE');
-    const getSpinnerText = () => `${spinnerMessage} (${currentIndex++}/${files.length})`;
-
     const printDuration = useDurationPrint();
-    spinner.start(getSpinnerText());
+    const countIncrease = useCountProgressMessage(files?.length, $t('CMD_TRANSLATE_TRANSLATE_TEMPLATE_FILE'));
+    spinner.start(countIncrease());
 
     for (const file of files) {
         const filename = getTranslationFilename(restoreTranslationFilename(file), translateTo);
@@ -81,7 +78,7 @@ async function translate({ engine, to: target, from: source, prefix, force }: Tr
         const isExisted = pathExist(`${sourcePath}\\${file}`);
         if (!isExisted) {
             stats.push({ filename, status: 404 });
-            spinner.text = getSpinnerText();
+            spinner.text = countIncrease();
             continue;
         }
 
@@ -96,10 +93,10 @@ async function translate({ engine, to: target, from: source, prefix, force }: Tr
             }),
         );
         stats.push(error ? { filename, status: 500 } : { filename, status: 200, ...stat });
-        spinner.text = getSpinnerText();
+        spinner.text = countIncrease();
     }
 
-    spinner.succeed(getSpinnerText());
+    spinner.succeed(countIncrease(true));
 
     const standardFiles = files.map((item) => filenameDictionary.get(item)).filter(Boolean) as string[];
     writeLanguageDataFile(targetPath, translateTo, standardFiles);

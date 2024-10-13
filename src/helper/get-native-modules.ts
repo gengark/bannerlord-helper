@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import { $t } from '../shared';
 import { ensure, formatDate, isPlainObject, op } from '../utils';
-import getModuleDirectory from './get-module-directory';
+import getModuleDirectory from './_internal/get-module-directory';
 import { type LiteralBoolean, type ValueAttributeTag } from './module-xml';
 import SubmoduleXml, {
     type DependedModuleOptions,

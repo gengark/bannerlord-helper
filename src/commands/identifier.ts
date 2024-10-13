@@ -1,7 +1,8 @@
 import ora from 'ora';
 import { renderModuleIdentifierStat } from '../components';
 import { choiceModuleDataFiles, normalizeTranslateOptions } from '../core';
-import { getModuleDataItems, identifyModuleDataFile, useDurationPrint } from '../helper';
+import { getModuleDataItems, identifyModuleDataFile } from '../helper';
+import { useCountProgressMessage, useDurationPrint } from '../hooks';
 import { $t } from '../shared';
 import { op } from '../utils';
 
@@ -27,23 +28,24 @@ async function identifier({ engine, language }: IdentifierCommandOptions = {}) {
     if (!modulePath || !files) return;
     const moduleDataPath = `${modulePath}\\ModuleData`;
 
-    let currentIndex = 0;
-    const spinnerMessage = $t('CMD_IDENTIFIER_WRITE_TRANSLATION_IDENTIFIER');
-    const getSpinnerText = () => `${spinnerMessage} (${currentIndex++}/${files.length})`;
-
     const printDuration = useDurationPrint();
-    spinner.start(getSpinnerText());
+    const countIncrease = useCountProgressMessage(files.length, $t('CMD_IDENTIFIER_WRITE_TRANSLATION_IDENTIFIER'));
+    spinner.start(countIncrease());
 
     const stats: IdentifierStatOptions[] = [];
     for (const file of files) {
         const items = getModuleDataItems(moduleDataPath, file);
-        if (items.size === 0) continue;
+        if (items.size === 0) {
+            spinner.text = countIncrease();
+            continue;
+        }
+
         const countRecord = identifyModuleDataFile(moduleDataPath, file, items);
         stats.push({ filename: file, ...countRecord });
-        spinner.text = getSpinnerText();
+        spinner.text = countIncrease();
     }
 
-    spinner.succeed(getSpinnerText());
+    spinner.succeed(countIncrease(true));
 
     const md = await renderModuleIdentifierStat(stats);
     console.log(md);

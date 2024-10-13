@@ -1,8 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { getApps, type SteamAppOption } from '@kabeep/node-steam-library';
-import { $t } from '../shared';
-import { ensure, to } from '../utils';
+import { $t } from '../../shared';
+import { ensure, to } from '../../utils';
 
 async function getModuleDirectory() {
     const [error, apps] = await to<SteamAppOption[]>(getApps());

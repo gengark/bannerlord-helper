@@ -3,7 +3,7 @@ import ora from 'ora';
 import { nexusmodApi, type NexusmodModuleOptions } from '../api';
 import { renderModulePage } from '../components';
 import { normalizeTranslateOptions, searchNexusmodModules } from '../core';
-import useDurationPrint from '../helper/use-duration-print';
+import useDurationPrint from '../hooks/use-duration-print';
 import { $t } from '../shared';
 import { op } from '../utils';
 

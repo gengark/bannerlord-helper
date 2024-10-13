@@ -3,7 +3,8 @@ import ora from 'ora';
 import { nexusmodApi } from '../api';
 import { renderModuleDetail } from '../components';
 import { getCliConfig, normalizeTranslateOptions, searchNativeModules } from '../core';
-import { type NativeModuleOptions, useDurationPrint } from '../helper';
+import type { NativeModuleOptions } from '../helper';
+import { useDurationPrint } from '../hooks';
 import { $t } from '../shared';
 import { op } from '../utils';
 

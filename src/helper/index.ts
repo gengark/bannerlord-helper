@@ -9,8 +9,6 @@ export { default as getModuleDataFiles } from './get-module-data-files';
 export type { ModuleDataItemOptions, ModuleDataItemXmlOptions } from './get-module-data-items';
 export { default as getModuleDataItems } from './get-module-data-items';
 
-export { default as getModuleDirectory } from './get-module-directory';
-
 export type { ModuleInquireChoice } from './get-module-search-options';
 export { default as getModuleSearchOptions } from './get-module-search-options';
 
@@ -20,8 +18,6 @@ export { default as getNativeModules } from './get-native-modules';
 export { default as getTranslationFilename } from './get-translation-filename';
 
 export { default as identifyModuleDataFile } from './identify-module-data-file';
-
-export { default as useDurationPrint } from './use-duration-print';
 
 export { default as restoreTranslationFilename } from './restore-translation-filename';
 

@@ -1,7 +1,7 @@
 import ora from 'ora';
 import { validateTranslateLanguage } from '../api';
 import { renderSupportLanguages } from '../components';
-import { useDurationPrint } from '../helper';
+import { useDurationPrint } from '../hooks';
 import { languageDictionary } from '../shared';
 import { op } from '../utils';
 

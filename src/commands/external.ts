@@ -7,8 +7,9 @@ import {
     writeExternalSubmoduleFile,
     writeExternalTranslationFile,
 } from '../core';
-import { getModuleDataItems, type NativeModuleOptions, useDurationPrint } from '../helper';
+import { getModuleDataItems, type NativeModuleOptions } from '../helper';
 import clearLanguagesDirectory from '../helper/clear-languages-directory';
+import { useCountProgressMessage, useDurationPrint } from '../hooks';
 import { $t } from '../shared';
 import { ensureDirectory, op, to } from '../utils';
 
@@ -60,12 +61,9 @@ async function external({ engine, from: source, to: target, prefix, force }: Ext
         if (error) return;
     }
 
-    let currentIndex = 0;
-    const spinnerMessage = $t('CMD_TRANSLATE_TRANSLATE_TEMPLATE_FILE');
-    const getSpinnerText = () => `${spinnerMessage} (${currentIndex++}/${files.length})`;
-
     const printDuration = useDurationPrint();
-    spinner.start(getSpinnerText());
+    const countIncrease = useCountProgressMessage(files.length, $t('CMD_TRANSLATE_TRANSLATE_TEMPLATE_FILE'));
+    spinner.start(countIncrease());
 
     const stats: ModuleTranslateStatOptions[] = [];
     for (const file of files) {
@@ -82,10 +80,10 @@ async function external({ engine, from: source, to: target, prefix, force }: Ext
         );
 
         stats.push(error ? { filename, status: 500 } : { filename, status: 200, ...stat });
-        spinner.text = getSpinnerText();
+        spinner.text = countIncrease();
     }
 
-    spinner.succeed(getSpinnerText());
+    spinner.succeed(countIncrease(true));
 
     const md = await renderModuleTranslateStat(stats);
     console.log(md);

@@ -6,8 +6,9 @@ import {
     writeLanguageDataFile,
     writeLanguageStringsFile,
 } from '../core';
-import { getLanguageTargetPath, getModuleDataItems, getTranslationFilename, useDurationPrint } from '../helper';
+import { getLanguageTargetPath, getModuleDataItems, getTranslationFilename } from '../helper';
 import clearLanguagesDirectory from '../helper/clear-languages-directory';
+import { useCountProgressMessage, useDurationPrint } from '../hooks';
 import { $t } from '../shared';
 import { ensureDirectory, op, to } from '../utils';
 
@@ -41,12 +42,9 @@ async function generate({ engine, language, to: target, force }: GenerateCommand
         if (error) return;
     }
 
-    let currentIndex = 0;
-    const spinnerMessage = $t('CMD_GENERATE_GEN_TRANSLATION_TEMPLATE');
-    const getSpinnerText = () => `${spinnerMessage} (${currentIndex++}/${files.length})`;
-
     const printDuration = useDurationPrint();
-    spinner.start(getSpinnerText());
+    const countIncrease = useCountProgressMessage(files.length, $t('CMD_GENERATE_GEN_TRANSLATION_TEMPLATE'));
+    spinner.start(countIncrease());
 
     const stats = [];
     const filenameDictionary = new Map<string, string>();
@@ -56,16 +54,17 @@ async function generate({ engine, language, to: target, force }: GenerateCommand
         const items = getModuleDataItems(moduleDataPath, file);
         if (items.size === 0) {
             stats.push({ filename, targetIds: [], ids: [], appendIds: [] });
+            spinner.text = countIncrease();
             continue;
         }
 
         filenameDictionary.set(file, filename);
         const stat = writeLanguageStringsFile(currentFilepath, translateTo, items);
         stats.push({ filename, ...stat });
-        spinner.text = getSpinnerText();
+        spinner.text = countIncrease();
     }
 
-    spinner.succeed(getSpinnerText());
+    spinner.succeed(countIncrease(true));
 
     const standardFiles = files.map((item) => filenameDictionary.get(item)).filter(Boolean) as string[];
     writeLanguageDataFile(languagesPath, translateTo, standardFiles);
