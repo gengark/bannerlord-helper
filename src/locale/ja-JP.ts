@@ -92,6 +92,7 @@ export default {
     SUCCESS: '成功',
     SKIP: '飛び越える',
     FAILED: '失敗',
+    TOTAL: '合計',
 
     TIP_SIGINT: 'Ctrl + C を入力して操作を中止します。',
     TIP_FORCE_DELETED: '--force パラメータは、{{path}} の第 1 レベルのディレクトリにあるすべての {{extension}} ファイルをクリアします。',

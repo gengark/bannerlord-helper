@@ -92,6 +92,7 @@ export default {
     SUCCESS: '成功',
     SKIP: '跳过',
     FAILED: '失败',
+    TOTAL: '总计',
 
     TIP_SIGINT: '键入 Ctrl + C 中止操作',
     TIP_FORCE_DELETED: '--force 参数会清除 {{path}} 一级目录下的所有 {{extension}} 文件, 确认继续吗?',

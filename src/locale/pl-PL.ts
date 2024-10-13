@@ -92,6 +92,7 @@ export default {
     SUCCESS: 'sukces',
     SKIP: 'przeskoczyć',
     FAILED: 'ponieść porażkę',
+    TOTAL: 'Całkowity',
 
     TIP_SIGINT: 'Wpisz Ctrl + C, aby przerwać operację',
     TIP_FORCE_DELETED: 'Parametr --force wyczyści wszystkie pliki {{extension}} w katalogu pierwszego poziomu {{path}}. ',

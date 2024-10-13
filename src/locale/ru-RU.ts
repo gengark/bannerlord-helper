@@ -92,6 +92,7 @@ export default {
     SUCCESS: 'успех',
     SKIP: 'перепрыгни',
     FAILED: 'неудача',
+    TOTAL: 'Общий',
 
     TIP_SIGINT: 'Введите Ctrl + C, чтобы прервать операцию.',
     TIP_FORCE_DELETED: 'Параметр --force очистит все файлы {{extension}} в каталоге {{path}} первого уровня. ',

@@ -13,17 +13,30 @@ function moduleGenerateStat(
         appendIds: string[];
     }>,
 ) {
+    let targetTotal = 0;
+    let total = 0;
+    let appendTotal = 0;
+
     return compose(
         horizontalRules(),
         heading($t('GENERATE_TEMPLATE_STAT'), 1),
         table(
             [$t('FILE'), $t('TEXT_ITEMS'), $t('EXISTING_ITEMS'), $t('NEW_ITEMS')],
-            stats.map((item) => [
-                item.filename,
-                item.targetIds.length,
-                item.targetIds.length > 0 ? item.ids.length : '-',
-                item.targetIds.length > 0 ? item.appendIds.length : '-',
-            ]),
+            [
+                ...stats.map((item) => {
+                    targetTotal += item.targetIds?.length ?? 0;
+                    total += item.ids?.length ?? 0;
+                    appendTotal += item.appendIds?.length ?? 0;
+
+                    return [
+                        item.filename,
+                        item.targetIds.length,
+                        item.targetIds.length > 0 ? item.ids.length : '-',
+                        item.targetIds.length > 0 ? item.appendIds.length : '-',
+                    ];
+                }),
+                [$t('TOTAL'), `${targetTotal}`, `${total}`, `${appendTotal}`],
+            ],
         ),
     );
 }

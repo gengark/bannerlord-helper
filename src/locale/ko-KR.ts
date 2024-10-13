@@ -92,6 +92,7 @@ export default {
     SUCCESS: '성공',
     SKIP: '뛰어넘다',
     FAILED: '실패하다',
+    TOTAL: '총',
 
     TIP_SIGINT: '작업을 중단하려면 Ctrl + C를 입력하세요.',
     TIP_FORCE_DELETED: '--force 매개변수는 {{path}} 첫 번째 수준 디렉터리에 있는 모든 {{extension}} 파일을 지웁니다. ',

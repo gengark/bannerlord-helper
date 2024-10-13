@@ -14,31 +14,42 @@ export interface ModuleTranslateStatOptions {
 }
 
 function moduleTranslateStat(stats: ModuleTranslateStatOptions[]) {
+    let targetTotal = 0;
+    let total = 0;
+    let appendTotal = 0;
+
     return compose(
         horizontalRules(),
         heading($t('TRANSLATE_TEMPLATE_STAT'), 1),
         table(
             [$t('FILE'), $t('TEXT_ITEMS'), $t('EXISTING_ITEMS'), $t('NEW_ITEMS')],
-            stats.map((item) => {
-                switch (item.status) {
-                    case 200: {
-                        return [
-                            item.filename,
-                            item.targetIds!.length,
-                            item.targetIds!.length > 0 ? item.ids!.length : '-',
-                            item.targetIds!.length > 0 ? item.appendIds!.length : '-',
-                        ];
-                    }
+            [
+                ...stats.map((item) => {
+                    switch (item.status) {
+                        case 200: {
+                            targetTotal += item.targetIds?.length ?? 0;
+                            total += item.ids?.length ?? 0;
+                            appendTotal += item.appendIds?.length ?? 0;
 
-                    case 404: {
-                        return [item.filename, $t('NO_TEMPLATE_FILE')];
-                    }
+                            return [
+                                item.filename,
+                                item.targetIds!.length,
+                                item.targetIds!.length > 0 ? item.ids!.length : '-',
+                                item.targetIds!.length > 0 ? item.appendIds!.length : '-',
+                            ];
+                        }
 
-                    default: {
-                        return [item.filename, undefined, undefined, $t('EXEC_FAILED')];
+                        case 404: {
+                            return [item.filename, $t('NO_TEMPLATE_FILE')];
+                        }
+
+                        default: {
+                            return [item.filename, undefined, undefined, $t('EXEC_FAILED')];
+                        }
                     }
-                }
-            }),
+                }),
+                [$t('TOTAL'), `${targetTotal}`, `${total}`, `${appendTotal}`],
+            ],
         ),
     );
 }

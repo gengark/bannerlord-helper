@@ -92,6 +92,7 @@ export default {
     SUCCESS: 'Erfolg',
     SKIP: 'über etwas springen',
     FAILED: 'scheitern',
+    TOTAL: 'Gesamt',
 
     TIP_SIGINT: 'Geben Sie Strg + C ein, um den Vorgang abzubrechen',
     TIP_FORCE_DELETED: 'Der Parameter --force löscht alle {{extension}}-Dateien im {{path}}-Verzeichnis der ersten Ebene. ',

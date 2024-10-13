@@ -92,6 +92,7 @@ export default {
     SUCCESS: 'başarı',
     SKIP: 'üstünden atla',
     FAILED: 'hata',
+    TOTAL: 'Toplam',
 
     TIP_SIGINT: 'İşlemi iptal etmek için Ctrl + C yazın',
     TIP_FORCE_DELETED: '--force parametresi, {{path}} birinci düzey dizinindeki tüm {{extension}} dosyalarını temizleyecektir. ',

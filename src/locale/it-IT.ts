@@ -92,6 +92,7 @@ export default {
     SUCCESS: 'successo',
     SKIP: 'saltare',
     FAILED: 'fallire',
+    TOTAL: 'Totale',
 
     TIP_SIGINT: 'Digitare Ctrl + C per interrompere l\'operazione',
     TIP_FORCE_DELETED: 'Il parametro --force cancellerà tutti i file {{extension}} nella directory di primo livello {{path}}. ',
