@@ -103,6 +103,6 @@
     "engines": {
         "node": ">=18"
     },
-    "os": ["win32"],
+    "os": ["win32", "linux"],
     "license": "MIT"
 }
