@@ -24,11 +24,13 @@ import {
     type TranslateCommandOptions,
 } from '../src';
 
-const pkg = JSON.parse(
-    readFileSync(new URL('../package.json', import.meta.url)).toString('utf8'),
-);
+const package_ = JSON.parse(readFileSync(new URL('../package.json', import.meta.url)).toString('utf8')) as {
+    [key: string]: unknown;
+    name: string;
+    version: string;
+};
 
-updateNotifier({ pkg }).notify({ isGlobal: true });
+updateNotifier({ pkg: package_ }).notify({ isGlobal: true });
 
 void yargs(hideBin(process.argv))
     .scriptName('bh')
