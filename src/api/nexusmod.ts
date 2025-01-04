@@ -180,7 +180,7 @@ function modulePageOptionVO(html: string) {
 }
 
 export async function getModulePage(id: string | number): Promise<ModulePageOptions> {
-    const [error, response] = await to(ky.get(`${BASE_URL}/mountandblade2bannerlord/mods/${id}`).text());
+    const [error, response] = await to(ky.get(buildUrl(BASE_URL, `/mountandblade2bannerlord/mods/${id}`)).text());
     ensure(!error && response, error?.message, 'EINVAL_NEXUSMOD_RESPONSE');
 
     return modulePageOptionVO(response);
