@@ -1,0 +1,2 @@
+"src/**/*.ts":
+  - "npm run lint"

@@ -5,13 +5,16 @@
     "type": "module",
     "main": "./dist/index.js",
     "types": "./dist/index.d.ts",
-    "files": ["dist"],
+    "files": [
+        "dist"
+    ],
     "bin": {
         "bh": "./dist/bannerlord-helper.js"
     },
     "scripts": {
         "dev": "ts-node bin/bannerlord-helper.ts",
         "lint": "xo src/**/*.ts bin/**/*.ts --fix",
+        "lint-staged": "lint-staged",
         "pretest": "npm run lint",
         "watch": "tsup --watch",
         "build": "tsup",
@@ -61,6 +64,7 @@
         "@types/sha1": "^1.1.5",
         "@types/yargs": "^17.0.33",
         "husky": "^9.1.5",
+        "lint-staged": "^15.2.10",
         "rimraf": "^5.0.10",
         "ts-node": "^10.9.2",
         "tsup": "^8.3.0",
@@ -103,6 +107,9 @@
     "engines": {
         "node": ">=18"
     },
-    "os": ["win32", "linux"],
+    "os": [
+        "win32",
+        "linux"
+    ],
     "license": "MIT"
 }

@@ -3,5 +3,5 @@
 
 # Detected changes in the src or bin directory, running checks...
 if git diff --cached --name-only | grep -Eq '^(src|bin)/'; then
-  npm run lint-staged
+  npm run build
 fi
