@@ -1,7 +1,9 @@
 #!/usr/bin/env node
+import { readFileSync } from 'node:fs';
 import process from 'node:process';
 import Exception from '@kabeep/exception';
 import chalk from 'chalk';
+import updateNotifier from 'update-notifier';
 import yargs, { type Argv } from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import {
@@ -21,6 +23,12 @@ import {
     translate,
     type TranslateCommandOptions,
 } from '../src';
+
+const pkg = JSON.parse(
+    readFileSync(new URL('../package.json', import.meta.url)).toString('utf8'),
+);
+
+updateNotifier({ pkg }).notify({ isGlobal: true });
 
 void yargs(hideBin(process.argv))
     .scriptName('bh')
