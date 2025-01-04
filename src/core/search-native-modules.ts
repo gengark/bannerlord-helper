@@ -12,7 +12,11 @@ export interface SearchNativeModulesOptions {
 
 async function searchNativeModules({ engine, to: target }: SearchNativeModulesOptions) {
     const spinner = ora({ color: 'cyan' }).start($t('CMD_INFO_SEARCH_MODULE_ON_NATIVE'));
-    const modules = await getNativeModules();
+    const [pathError, modules] = await to(getNativeModules());
+    if (pathError) {
+        spinner.fail(pathError.message);
+        return;
+    }
 
     const [error, options] = await to(
         getModuleSearchOptions<NativeModuleOptions>('', {
