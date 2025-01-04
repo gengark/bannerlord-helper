@@ -1,7 +1,7 @@
 {
     "name": "bannerlord-helper",
     "description": "A collection of useful tools dedicated to making i18n works easier for Mount & Blade II: Bannerlord mod creators",
-    "version": "0.2.2",
+    "version": "0.2.3",
     "type": "module",
     "main": "./dist/index.js",
     "types": "./dist/index.d.ts",
