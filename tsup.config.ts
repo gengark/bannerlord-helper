@@ -4,7 +4,7 @@ export default defineConfig((opts) => ({
     entry: ['bin/bannerlord-helper.ts'],
     format: ['esm'],
     outDir: 'dist',
-    target: ['es2015'],
+    target: ['esnext'],
     bundle: true,
     clean: !opts.watch,
     minify: false,
