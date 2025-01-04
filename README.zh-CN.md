@@ -20,19 +20,31 @@
 
 ## 📖 简介
 
-Node.js 的实用终端工具集，致力于让《Mount & Blade II: Bannerlord》模组创作者能够更轻松地进行国际化工作。
+Node.js 的实用终端工具集，致力于让《Mount & Blade II: Bannerlord》**模组创作者**能够更轻松地进行国际化工作。
 
-## ⚙️ 安装
+## 💡 为什么使用 bannerlord-helper?
 
-1. **首先确保电脑确保安装了 [Node](https://nodejs.org/zh-cn) 程序， 并且安装路径存在于操作系统或用户环境变量中**
+`bannerlord-helper` 可以帮助 ***翻译贡献者*** 快速创建符合官方标准目录结构和 XML 内容的本地化文件和翻译结果，**让翻译工作只需要专注于翻译**。
 
-2. 在任意终端（cmd/bash/powershell/...）通过 NPM 安装本程序。
+即使源模组频繁更新，`bannerlord-helper` 的标识符算法也能让上个版本已翻译的结果被保留和复用，**这意味着之前所作的努力永远不会被浪费**。
+
+对于 ***玩家/游戏爱好者*** 来说，`bannerlord-helper`可以快速准确地将没有国际化的模组翻译成你的语言，
+**只需一行命令，然后打开游戏享受**。
+
+## ⚙️ 先决条件
+
+- 确保电脑确保安装了大于 18 版本的 [Node](https://nodejs.org/zh-cn) 程序。
+- 安装时勾选了添加到系统环境变量 (path) 的选项 (如有)。
+
+## 📦 安装
+
+1. 在任意终端（cmd/bash/powershell/...）通过 NPM 安装本程序。
 
     ```bash
     npm install bannerlord-helper --global
     ```
 
-3. (如果安装成功则跳过此步) 如果安装失败，首先确保 Node 正确安装。
+2. (如果安装成功则跳过此步) 如果安装失败，首先确保 Node 正确安装。
 
     ```bash
     # 打印版本号即正确安装，如：10.7.0
@@ -40,12 +52,12 @@ Node.js 的实用终端工具集，致力于让《Mount & Blade II: Bannerlord�
     npm -v
     ```
 
-4. (如果安装成功则跳过此步) 如果 Node 未正常安装，检查或新增安装路径和用户环境变量。
+3. (如果安装成功则跳过此步) 如果 Node 未正常安装，检查或新增安装路径和用户环境变量。
 
     > 如果不会操作的话可以查看这张引导图片 [Node 环境变量](./docs/images/node-env-path.zh-CN.png)，或直接安装 Node
     > 官方提供的 [预构建安装程序](https://nodejs.org/zh-cn/download/prebuilt-installer)。
 
-5. 中国大陆地区，某些特殊日期可能会因为网络问题导致 npm install 执行失败，使用 VPN 或执行命令将 NPM 源设置为淘宝技术团队的镜像。
+4. 中国大陆地区，某些特殊日期可能会因为网络问题导致 npm install 执行失败，使用 VPN 或执行命令将 NPM 源设置为淘宝技术团队公开的镜像。
 
     ```bash
     # 等同于我们向淘宝发送要求下载某个程序的消息，淘宝的服务器下载完后，我们再从淘宝的静态资源服务器安装 NPM 上的程序
@@ -54,7 +66,7 @@ Node.js 的实用终端工具集，致力于让《Mount & Blade II: Bannerlord�
     npm install bannerlord-helper --global
     ```
 
-6. 运行帮助命令检查命令行是否安装成功。
+5. 运行帮助命令检查命令行是否安装成功。
 
     ```bash
     bh -h

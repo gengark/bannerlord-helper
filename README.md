@@ -22,18 +22,32 @@ English | [简体中文](README.zh-CN.md) | [Türkçe](README.tr-TR.md)
 
 A collection of useful tools dedicated to making i18n works easier for Mount & Blade II: Bannerlord mod creators.
 
-## ⚙️ Installation
+## 💡 Why bannerlord-helper?
 
-1. First make sure that the [Node](https://nodejs.org/en) is installed on the computer and the installation path exists
-in the operating system or user environment variable.
+`bannerlord-helper` assists ***translation contributors*** in quickly creating localized files and translations that
+adhere to the official directory structure and XML content standards, **allowing them to focus solely on the
+translation work.**
 
-2. Install this cli through NPM in any terminal (cmd/bash/powershell/...).
+Even with frequent updates to the source mod, `bannerlord-helper` identifier algorithm ensures that translations from
+previous versions are preserved and reused, **meaning your past efforts are never wasted.**
+
+For ***players / enthusiasts***, `bannerlord-helper` offers a fast and accurate way to translate mods without
+internationalization into your language with **just a single command, and then you can enjoy the game right away.**
+
+## ⚙️ Prerequisites
+
+- make sure that the [Node version 18+](https://nodejs.org/en) is installed on the computer
+- the installation path exists in the operating system or user environment variable.
+
+## 📦 Installation
+
+1. Install this cli through NPM in any terminal (cmd/bash/powershell/...).
 
     ```bash
     npm install bannerlord-helper --global
     ```
 
-3. Run the help command to check whether the cli is installed successfully.
+2. Run the help command to check whether the cli is installed successfully.
 
     ```bash
     bh -h

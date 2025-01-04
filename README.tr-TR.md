@@ -23,18 +23,32 @@
 Mount & Blade II: Bannerlord mod yaratıcıları için i18n'nin işini kolaylaştırmaya adanmış kullanışlı araçlardan oluşan
 bir koleksiyon.
 
-## ⚙️ Kurulum
+## 💡 Why bannerlord-helper?
 
-1. Öncelikle bilgisayarda [Node](https://nodejs.org/en)'un kurulu olduğundan ve kurulum yolunun mevcut olduğundan emin
-   olun işletim sistemi veya kullanıcı ortamı değişkeninde.
+`bannerlord-helper`, çeviri katkıcılarına, resmi dizin yapısı ve XML içerik standartlarına uygun yerelleştirilmiş dosyalar
+ve çeviriler oluşturmayı hızlı bir şekilde sağlar, **onların yalnızca çeviri işine odaklanmalarına olanak tanır**.
 
-2. Bu cli'yi NPM aracılığıyla herhangi bir terminale kurun (cmd/bash/powershell/...).
+Kaynak modda sık yapılan güncellemelerle bile, `bannerlord-helper` tanımlayıcı algoritması, önceki sürümlerden yapılan
+çevirilerin korunmasını ve yeniden kullanılmasını sağlar, **geçmişteki çabalarınızın asla boşa gitmeyeceği anlamına gelir**.
+
+Oyuncular / meraklılar için `bannerlord-helper`, yerelleştirilmemiş modları dilinize **tek bir komutla hızlı ve doğru bir
+şekilde çevirmeyi** ve ardından hemen oyunun keyfini çıkarmayı sağlar.
+
+## ⚙️ Önkoşullar
+
+- Öncelikle bilgisayarda [Node](https://nodejs.org/)'un kurulu olduğundan ve kurulum yolunun mevcut olduğundan emin
+  olun işletim sistemi veya kullanıcı ortamı değişkeninde.
+
+## 📦 Kurulum
+
+1. Bu cli'yi NPM aracılığıyla herhangi bir terminale kurun (cmd/bash/powershell/...).
 
     ```bash
     npm install bannerlord-helper --global
     ```
 
-3. (Kurulum başarılı olursa bu adımı atlayın) Kurulum başarısız olursa öncelikle Node'un doğru şekilde kurulduğundan emin
+2. (Kurulum başarılı olursa bu adımı atlayın) Kurulum başarısız olursa öncelikle Node'un doğru şekilde kurulduğundan
+   emin
    olun.
 
     ```bash
@@ -43,13 +57,13 @@ bir koleksiyon.
     npm -v
     ```
 
-4. (Kurulum başarılı olursa bu adımı atlayın) Düğüm normal şekilde kurulmadıysa kurulum yolunu ve kullanıcı ortamı
+3. (Kurulum başarılı olursa bu adımı atlayın) Düğüm normal şekilde kurulmadıysa kurulum yolunu ve kullanıcı ortamı
    değişkenlerini kontrol edin veya ekleyin.
 
    > Nasıl yapılacağını bilmiyorsanız şunları deneyebilirsiniz: Node'un
    > resmi [önceden oluşturulmuş yükleyicisini](https://nodejs.org/zh-cn/download/prebuilt-installer) doğrudan yükleyin.
 
-5. Cli'nin başarıyla yüklenip yüklenmediğini kontrol etmek için yardım komutunu çalıştırın.
+4. Cli'nin başarıyla yüklenip yüklenmediğini kontrol etmek için yardım komutunu çalıştırın.
 
     ```bash
     bh -h
